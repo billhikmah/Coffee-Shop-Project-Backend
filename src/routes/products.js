@@ -4,7 +4,7 @@ const productsController = require("../controllers/products");
 const validate = require("../middleware/validate");
 
 Router.post("/", validate.addNewProduct, productsController.postNewProduct);
-Router.get("/", validate.searchNewProduct, productsController.searchProduct);
+Router.get("/", validate.searchProduct, productsController.searchProduct);
 Router.patch("/", productsController.updateProductStock);
 Router.delete("/", productsController.deleteProduct);
 

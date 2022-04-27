@@ -1,4 +1,4 @@
-const searchNewProduct = (req, res, next) => {
+const searchProduct = (req, res, next) => {
     const {name, id_category, sort, order} = req.query;
     if(typeof name !== "string"){
         return res.status(400).json({
@@ -41,5 +41,5 @@ const addNewProduct = (req, res, next) => {
 
 module.exports = {
     addNewProduct,
-    searchNewProduct
+    searchProduct
 };
