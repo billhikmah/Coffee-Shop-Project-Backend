@@ -24,9 +24,18 @@ const addNewTransaction = (body) => {
 
 const searchTransactionsFromServer = (query) => {
     return new Promise((resolve, reject) => {
-        const {id_user} = query;
-        const sqlQuery = "SELECT * FROM public.transactions where id_user = $1";
-        db.query(sqlQuery, [id_user])
+        const {id_user, id} = query;
+        let key;
+        let sqlQuery = "SELECT * FROM public.transactions";
+        if(id_user){
+            key = id_user;
+            sqlQuery += " where id_user = $1"
+        }
+        if(id){
+            key = id;
+            sqlQuery += " where id = $1"
+        }
+        db.query(sqlQuery, [key])
         .then((result) => {
             if(result.rows.length === 0){
                 return reject({
@@ -49,30 +58,32 @@ const searchTransactionsFromServer = (query) => {
     });
 };
 
-const updatePaymentMethod = (body) => {
+const changeTransaction = (body, query) => {
     return new Promise((resolve, reject) => {
-        const {id, id_payment_methods} = body;
-        let sqlQuery = "UPDATE public.transactions SET id_payment_methods = $1 WHERE id = $2 returning *";
-        db.query(sqlQuery, [id_payment_methods, id])
-        .then(({rows, rowCount}) => {
-            if(rowCount === 0){
-                return reject({
-                    error: "Transaction Not Found",
-                    status: 400,
+        const {id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = body;
+        const {id} = query;
+        let sqlQuery = "UPDATE public.transactions set id_user = COALESCE ($1, id_user), id_product  = COALESCE ($2, id_product), qty  = COALESCE ($3, qty), id_total  = COALESCE ($4, id_total), id_delivery  = COALESCE ($5, id_delivery), time  = COALESCE ($6, time), date  = COALESCE ($7, date), id_payment_methods  = COALESCE ($8, id_payment_methods), address = COALESCE ($9, address) WHERE id = $10 returning *";
+        console.log(sqlQuery)
+            db.query(sqlQuery, [id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address, id])
+            .then(({rows}) => {
+                if(rows.length === 0){
+                    return reject({
+                        error: "Id Not Found!",
+                        status: 400,
+                    });
+                }
+                const response = {
+                    message: "Transaction Updated!",
+                    data: rows
+                };
+                resolve(response);
+            })
+            .catch((error) => {
+                reject({
+                    error,
+                    status: 500
                 });
-            }
-            const response = {
-                data: rows,
-                message: "Payment method updated"
-            };
-            resolve(response);
-        })
-        .catch((error) => {
-            reject({
-                error,
-                status: 500
             });
-        });
     });
 };
 
@@ -106,7 +117,7 @@ const deleteTransactionFromServer = (body) => {
 module.exports = {
     addNewTransaction,
     searchTransactionsFromServer,
-    updatePaymentMethod,
+    changeTransaction,
     deleteTransactionFromServer
 
 };

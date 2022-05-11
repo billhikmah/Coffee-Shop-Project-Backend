@@ -1,4 +1,4 @@
-const {addNewUser, searchUserFromServer, updateAddressFromServer, deleteAccountFromServer} = require("../models/users");
+const {addNewUser, searchUserFromServer, updateUser, deleteAccountFromServer} = require("../models/users");
 
 const postNewUser  = (req, res) =>{
     addNewUser(req.body)
@@ -31,8 +31,8 @@ const searchUser  = (req, res) =>{
     });
 };
 
-const updateAddress  = (req, res) =>{
-    updateAddressFromServer(req.body)
+const updateAccount  = (req, res) =>{
+    updateUser(req.body, req. query)
     .then(({data, message})=>{
         res.status(201).json({
             message,
@@ -40,14 +40,14 @@ const updateAddress  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
 const deleteAccount  = (req, res) =>{
-    deleteAccountFromServer(req.body)
+    deleteAccountFromServer(req.query)
     .then(({message, data})=>{
         res.status(200).json({
             message,
@@ -55,15 +55,15 @@ const deleteAccount  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
 module.exports = {
     postNewUser,
     searchUser,
-    updateAddress,
+    updateAccount,
     deleteAccount
 };

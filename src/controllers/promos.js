@@ -1,4 +1,4 @@
-const {addNewPromo, searchPromosFromServer, updateDateEnd, deletePromoFromServer } = require("../models/promos");
+const {addNewPromo, searchPromosFromServer, updatePromo, deletePromoFromServer } = require("../models/promos");
 
 const postNewPromo  = (req, res) =>{
     addNewPromo(req.body)
@@ -32,8 +32,8 @@ const searchPromos = (req, res) => {
     });
 };
 
-const updateDate  = (req, res) =>{
-    updateDateEnd(req.body)
+const updatePromos  = (req, res) =>{
+    updatePromo(req.query, req.body)
     .then(({data, message})=>{
         res.status(201).json({
             message,
@@ -41,9 +41,9 @@ const updateDate  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
@@ -56,15 +56,15 @@ const deletePromo  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
 module.exports = {
     postNewPromo,
     searchPromos,
-    updateDate,
+    updatePromos,
     deletePromo
 };

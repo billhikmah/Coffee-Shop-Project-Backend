@@ -1,10 +1,11 @@
 const express = require("express");
 const Router = express.Router();
 const transactionsController = require("../controllers/transactions");
+const validate = require("../middleware/transactionValidation")
 
-Router.post("/", transactionsController.postNewTransaction);
+Router.post("/",validate.addNewTransaction, transactionsController.postNewTransaction);
 Router.get("/", transactionsController.searchTransaction);
-Router.patch("/", transactionsController.updateTransaction);
+Router.patch("/",validate.updateTransaction, transactionsController.updateTransaction);
 Router.delete("/", transactionsController.deleteTransaction);
 
 

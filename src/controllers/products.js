@@ -1,7 +1,7 @@
-const {addNewProduct, searchProductFromServer, updateStock, deleteProductFromServer } = require("../models/products");
+const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer } = require("../models/products");
 
 const postNewProduct  = (req, res) =>{
-    addNewProduct(req.body)
+    addNewProduct(req.query)
     .then(({data})=>{
         res.status(201).json({
             message: "Product Added",
@@ -31,8 +31,8 @@ const searchProduct = (req, res) => {
         });
     });
 };
-const updateProductStock  = (req, res) =>{
-    updateStock(req.body)
+const updateProducts  = (req, res) =>{
+    updateProduct(req.body, req.query)
     .then(({message, data})=>{
         res.status(201).json({
             message,
@@ -40,31 +40,30 @@ const updateProductStock  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-         );
+        });
     });
 };
 
 const deleteProduct  = (req, res) =>{
-    deleteProductFromServer(req.body)
-    .then(({total, data, message})=>{
+    deleteProductFromServer(req.query)
+    .then(({data, message})=>{
         res.status(200).json({
             message,
-            total,
             data
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
 module.exports = {
     postNewProduct,
     searchProduct,
-    updateProductStock,
+    updateProducts,
     deleteProduct
 };

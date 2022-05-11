@@ -1,4 +1,4 @@
-const {addNewTransaction, searchTransactionsFromServer, updatePaymentMethod, deleteTransactionFromServer } = require("../models/transactions");
+const {addNewTransaction, searchTransactionsFromServer, changeTransaction, deleteTransactionFromServer } = require("../models/transactions");
 
 const postNewTransaction  = (req, res) =>{
     addNewTransaction(req.body)
@@ -33,7 +33,7 @@ const searchTransaction= (req, res) => {
 };
 
 const updateTransaction  = (req, res) =>{
-    updatePaymentMethod(req.body)
+    changeTransaction(req.body, req.query)
     .then(({data, message})=>{
         res.status(201).json({
             message,
@@ -41,9 +41,9 @@ const updateTransaction  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
@@ -56,9 +56,9 @@ const deleteTransaction  = (req, res) =>{
         });
     })
     .catch(({error, status})=>{
-        res.status(status).json(
+        res.status(status).json({
             error
-        );
+        });
     });
 };
 
