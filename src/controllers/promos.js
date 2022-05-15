@@ -2,7 +2,12 @@ const {addNewPromo, searchPromosFromServer, updatePromo, deletePromoFromServer }
 const {errorResponse, successResponse} = require("../helpers/response");
 
 const postNewPromo  = (req, res) =>{
-    addNewPromo(req.body)
+    const {file = null} = req;
+    let picture;
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
+    addNewPromo(req.body, picture)
     .then(({data, message})=>{
         res.status(201).json({
             message,
@@ -81,7 +86,12 @@ const searchPromos = (req, res) => {
 };
 
 const updatePromos  = (req, res) =>{
-    updatePromo(req.query, req.body)
+    const {file = null} = req;
+    let picture;
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
+    updatePromo(req.query, req.body, picture)
     .then(({data, message})=>{
         res.status(201).json({
             message,

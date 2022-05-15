@@ -77,7 +77,7 @@ const updateUser = (req, res, next) => {
         }
     }
     if(sex){
-        if(sex !== 1 && sex !== 2){
+        if(sex !== "1" && sex !== "2"){
             return res.status(400).json({
                 error: "Invalid input sex!"
             });
@@ -89,4 +89,4 @@ const updateUser = (req, res, next) => {
 module.exports = {
     addNewUser, 
     updateUser
-}
+};

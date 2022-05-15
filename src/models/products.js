@@ -193,9 +193,9 @@ const searchProductFromServer = (query) => {
     });
 };
 
-const addNewProduct = (query) => {
+const addNewProduct = (body, picture) => {
     return new Promise((resolve, reject) => {
-        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, } = query;
+        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, } = body;
         const sqlQuery = 'INSERT INTO public.products (name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 ) RETURNING *';
         db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture])
         .then(({rows})=>{
@@ -213,10 +213,11 @@ const addNewProduct = (query) => {
     });
 };
 
-const updateProduct = (body, query) => {
+const updateProduct = (body, query, picture) => {
     return new Promise((resolve, reject) => {
-        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time} = body;
+        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock} = body;
         const {id} = query;
+        const input_time = new Date(Date.now());
         let sqlQuery = "UPDATE public.products set name = COALESCE ($1, name), id_size  = COALESCE ($2, id_size), price  = COALESCE ($3, price), id_category  = COALESCE ($4, id_category), description  = COALESCE ($5, description), id_delivery_method  = COALESCE ($6, id_delivery_method), stock  = COALESCE ($7, stock), picture  = COALESCE ($8, picture), start_hour = COALESCE ($9, start_hour), end_hour = coalesce ($10,end_hour), input_time = coalesce ($11, input_time) WHERE id = $12 returning *";
             db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, stock, picture, start_hour, end_hour, input_time, id])
             .then(({rows}) => {

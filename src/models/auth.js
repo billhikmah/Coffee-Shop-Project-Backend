@@ -16,9 +16,9 @@ const getEmail = (email) => {
     
 };
 
-const registerNewUSer = (body, password) => {
+const registerNewUSer = (body, password, picture) => {
     return new Promise ((resolve, reject) => {
-        const {first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture} = body;
+        const {first_name, last_name, display_name, email, phone, date_of_birth, address, sex} = body;
         
         const sqlQuery = "INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);";
             const created_at = new Date(Date.now());

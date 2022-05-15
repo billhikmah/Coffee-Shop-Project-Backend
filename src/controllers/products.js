@@ -2,7 +2,12 @@ const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromS
 const {errorResponse, successResponse} = require("../helpers/response");
 
 const postNewProduct  = (req, res) =>{
-    addNewProduct(req.query)
+    const {file = null} = req;
+    let picture;
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
+    addNewProduct(req.body, picture)
     .then(({data})=>{
         res.status(201).json({
             message: "Product Added",
@@ -96,7 +101,12 @@ const searchProduct = (req, res) => {
     
 };
 const updateProducts  = (req, res) =>{
-    updateProduct(req.body, req.query)
+    const {file} = req;
+    let picture = "";
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
+    updateProduct(req.body, req.query, picture)
     .then(({message, data})=>{
         res.status(201).json({
             message,

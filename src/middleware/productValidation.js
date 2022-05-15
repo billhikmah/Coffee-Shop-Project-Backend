@@ -32,8 +32,8 @@ const searchProduct = (req, res, next) => {
 };
 
 const addNewProduct = (req, res, next) => {
-    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.query
-    const validateQuery = Object.keys(req.query).filter(
+    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body;
+    const validateQuery = Object.keys(req.body).filter(
         (key) =>
             key === "name" || key === "price" || key === "id_category" ||
             key === "id_delivery_method" || key === "id_size" || key === "stock"
@@ -81,7 +81,8 @@ const addNewProduct = (req, res, next) => {
 };
 
 const updateProduct = (req, res, next) => {
-    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body
+    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body;
+    const {file} = req;
 
     if(name){
         if(name.length > 40){
@@ -127,6 +128,7 @@ const updateProduct = (req, res, next) => {
             });
         }
     }
+    
     next();
 };
 

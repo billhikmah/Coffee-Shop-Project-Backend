@@ -76,7 +76,6 @@ const updatePromo = (req, res, next) => {
             })
         }
     }
-    console.log(disc)
     if(disc){
         if(disc < 0.05 || disc > 1){
             return res.status(400).json({
@@ -114,4 +113,4 @@ const updatePromo = (req, res, next) => {
 module.exports ={
     addNewPromo,
     updatePromo
-}
+};

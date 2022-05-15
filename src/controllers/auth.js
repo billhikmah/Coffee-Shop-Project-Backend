@@ -4,10 +4,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = (req, res) => {
+    const {file = null} = req;
+    let picture;
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
     const {password} = req.body;
     bcrypt.hash(password, 10)
         .then((hashedPassword) => {
-            registerNewUSer(req.body, hashedPassword)
+            registerNewUSer(req.body, hashedPassword, picture)
             .then(() => {
                 successResponse(res, 201, {msg: "User successfully registered"}, null);
             })

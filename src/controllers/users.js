@@ -88,14 +88,21 @@ const searchUser  = (req, res) =>{
 };
 
 const updateAccount  = (req, res) =>{
-    updateUser(req.body, req.userPayload)
+    const payload = req.userPayload;
+    const {file = null} = req;
+    let picture;
+    if(file){
+        picture = file.path.replace("public", "").replace(/\\/g, "/");
+    }
+    updateUser(req.body, payload, picture)
     .then(({data, message})=>{
         res.status(201).json({
             message,
-            data,
+            data
         });
     })
-    .catch(({error, status})=>{
+    .catch((err)=>{
+        const {error, status} = err;
         res.status(status).json({
             error
         });
