@@ -13,7 +13,7 @@ Router.post("/", authController.signIn);
 Router.delete("/", (req, res) => {
     res.json({
         msg: "Sign Out Success"
-    })
+    });
 });
 
 module.exports = Router;

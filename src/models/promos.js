@@ -24,25 +24,39 @@ const addNewPromo = (body) => {
 
 const searchPromosFromServer = (query) => {
     return new Promise((resolve, reject) => {
-        let {keyword, id_name} = query;
-        let sqlQuery = "SELECT * FROM public.promos where lower(name) like lower('%' || $1 || '%') or lower(coupon_code) like lower('%' || $1 || '%')";
-        if(id_name){
-            keyword = id_name
-            sqlQuery = "SELECT * FROM public.promos where id_name = $1";
-        }
-        db.query(sqlQuery, [keyword])
+        let {keyword, page, limit} = query;
+        const offset = (page - 1)*limit;
+        let sqlQuery = "SELECT * FROM public.promos where lower(name) like lower('%' || $1 || '%') or lower(coupon_code) like lower('%' || $1 || '%') limit $2 offset $3";
+        let metaQuery ="select count(*) from public.promos where lower(name) like lower('%' || $1 || '%') or lower(coupon_code) like lower('%' || $1 || '%')";
+        
+        db.query(metaQuery, [keyword])
         .then((result) => {
-            if(result.rows.length === 0){
-                return reject({
-                    error: "Promo Not Found",
-                    status: 404,
+            const totalData = parseInt(result.rows[0].count);
+
+            db.query(sqlQuery, [keyword, limit, offset])
+            .then((result) => {
+                if(result.rows.length === 0){
+                    return reject({
+                        error: "Promo Not Found",
+                        status: 404,
+                    });
+                }
+                 const totalPage = totalData/limit;
+                    const response = {
+                        totalData,
+                        totalPage: Math.ceil(totalPage),
+                        totalDataOnThisPage: result.rowCount,
+                        data: result.rows
+                    };
+
+                    return resolve(response);
+            })
+            .catch((error) => {
+                reject({
+                    error,
+                    status: 500
                 });
-            }
-            const response = {
-                total: result.rowCount,
-                data: result.rows
-            };
-            resolve(response);
+            });
         })
         .catch((error) => {
             reject({

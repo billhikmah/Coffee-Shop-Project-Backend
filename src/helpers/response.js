@@ -1,7 +1,7 @@
-const successResponse = (res, status, data, total) => {
+const successResponse = (res, status, data, meta) => {
     res.status(status).json({
         data,
-        total,
+        meta,
         err: null
     });
 };
@@ -15,4 +15,4 @@ const errorResponse = (res, status, err) => {
 module.exports = {
     successResponse,
     errorResponse
-}
+};

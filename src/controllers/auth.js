@@ -30,6 +30,7 @@ const signIn = (req, res) => {
     //Match email and password
     getPassword(email)
     .then((result) => {
+        const id = result.id;
         bcrypt.compare(password, result.password)
         .then((result) => {
             if(!result){
@@ -37,12 +38,19 @@ const signIn = (req, res) => {
             }
             //Generate JWT
             const payload = {
-                email
+                email,
+                id
             };
-            const token = jwt.sign(payload, process.env.JWT_KEY);
-    
+            const jwtOptions = {
+                issuer: process.env.JWT_ISSUER,
+                expiresIn: "30s",
+            };
+            const token = jwt.sign(payload, process.env.JWT_KEY, jwtOptions);
             //Return
             successResponse(res, 200, {email, token}, null);
+        })
+        .catch((status, err) => {
+            errorResponse(res, status, err);
         });
         
     })
