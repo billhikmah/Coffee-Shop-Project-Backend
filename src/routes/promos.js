@@ -1,7 +1,7 @@
 const express = require("express");
 const Router = express.Router();
 const promosController = require("../controllers/promos");
-const validate = require("../middleware/promoValidation")
+const validate = require("../middleware/promoValidation");
 
 Router.post("/", validate.addNewPromo, promosController.postNewPromo);
 Router.get("/",  promosController.searchPromos);

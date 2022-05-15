@@ -120,7 +120,6 @@ const deleteAccount  = (req, res) =>{
 const checkProfile = (req, res) => {
     getUser(req.userPayload)
     .then((result) => {
-        console.log(result)
         successResponse(res, 202, result, null);
     })
     .catch((err) => {

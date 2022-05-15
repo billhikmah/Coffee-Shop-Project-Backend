@@ -10,6 +10,7 @@ db.connect()
     console.log("DB is connected");
     server.use(express.urlencoded({extended: false}));
     server.use(express.json());
+    
     server.use(mainRouter);
     server.listen(PORT, () => {
         console.log(`Server is Running at PORT ${PORT}`);
