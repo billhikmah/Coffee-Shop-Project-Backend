@@ -1,7 +1,6 @@
-const successResponse = (res, status, data, meta) => {
+const successResponse = (res, status, data) => {
     res.status(status).json({
         data,
-        meta,
         err: null
     });
 };
@@ -12,7 +11,16 @@ const errorResponse = (res, status, err) => {
     });
 };
 
+const searchResponse = (res, status, data, meta) => {
+    res.status(status).json({
+        data,
+        meta,
+        err: null
+    });
+};
+
 module.exports = {
     successResponse,
-    errorResponse
+    errorResponse, 
+    searchResponse
 };

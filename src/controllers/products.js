@@ -1,9 +1,8 @@
 const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer } = require("../models/products");
-const {errorResponse, successResponse} = require("../helpers/response");
+const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
 
 const postNewProduct  = (req, res) =>{
     const {file} = req;
-    console.log(file)
     let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
@@ -65,7 +64,7 @@ const searchProduct = (req, res) => {
                 page: parseInt(req.query.page),
                 next,
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
             const meta = {
@@ -84,7 +83,7 @@ const searchProduct = (req, res) => {
                 totalPage,
                 page: parseInt(req.query.page)
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         const meta = {
             totalData,
@@ -94,7 +93,7 @@ const searchProduct = (req, res) => {
             next,
             prev
         };
-        successResponse(res, 202, data, meta);
+        searchResponse(res, 202, data, meta);
     })
     .catch(({error, status}) => {
         errorResponse(res, status, error);

@@ -12,10 +12,6 @@ Router.post("/new", imageUpload.single("picture"), validate.addNewUser, authVali
 Router.post("/", authController.signIn);
 
 //Sign Out
-Router.delete("/", (req, res) => {
-    res.json({
-        msg: "Sign Out Success"
-    });
-});
+Router.delete("/signout", authController.signout);
 
 module.exports = Router;

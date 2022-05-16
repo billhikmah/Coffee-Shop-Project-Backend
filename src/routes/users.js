@@ -7,7 +7,7 @@ const imageUpload = require("../middleware/upload");
 
 Router.post("/", imageUpload.single("picture"), validate.addNewUser, usersController.postNewUser);
 Router.get("/search", usersController.searchUser);
-Router.patch("/", token.checkToken, imageUpload.single("picture"), validate.updateUser, usersController.updateAccount);
+Router.patch("/", imageUpload.single("picture"), token.checkToken, validate.updateUser, usersController.updateAccount);
 Router.delete("/", usersController.deleteAccount);
 Router.get("/myProfile", token.checkToken, usersController.checkProfile);
 

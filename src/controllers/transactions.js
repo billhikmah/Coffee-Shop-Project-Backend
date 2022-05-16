@@ -1,5 +1,5 @@
 const {addNewTransaction, searchTransactionsFromServer, changeTransaction, deleteTransactionFromServer } = require("../models/transactions");
-const {errorResponse, successResponse} = require("../helpers/response");
+const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
 
 const postNewTransaction  = (req, res) =>{
     addNewTransaction(req.body, req.query)
@@ -49,7 +49,7 @@ const searchTransaction= (req, res) => {
                 page: parseInt(req.query.page),
                 next,
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
             const meta = {
@@ -59,7 +59,7 @@ const searchTransaction= (req, res) => {
                 page: parseInt(req.query.page),
                 prev
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         if(totalPage === 1){
             const meta = {
@@ -68,7 +68,7 @@ const searchTransaction= (req, res) => {
                 totalPage,
                 page: parseInt(req.query.page)
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         const meta = {
             totalData,
@@ -78,7 +78,7 @@ const searchTransaction= (req, res) => {
             next,
             prev
         };
-        successResponse(res, 202, data, meta);
+        searchResponse(res, 202, data, meta);
         })
     .catch(({error, status}) => {
         errorResponse(res, status, error);

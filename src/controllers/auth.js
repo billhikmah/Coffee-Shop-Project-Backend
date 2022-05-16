@@ -48,7 +48,7 @@ const signIn = (req, res) => {
             };
             const jwtOptions = {
                 issuer: process.env.JWT_ISSUER,
-                expiresIn: "30s",
+                expiresIn: "300000000s",
             };
             const token = jwt.sign(payload, process.env.JWT_KEY, jwtOptions);
             //Return
@@ -65,7 +65,20 @@ const signIn = (req, res) => {
     
 };
 
+const signout = (req, res) => {
+    const payload = {
+        msg: "Successfully sign out"
+    };
+    const jwtOptions = {
+        issuer: process.env.JWT_ISSUER,
+        expiresIn: "1s"
+    };
+    const token = jwt.sign(payload, process.env.JWT_KEY, jwtOptions);
+    successResponse(res, 200, {token, msg: "Successfully sign out"}, null);
+};
+
 module.exports = {
     register,
-    signIn
+    signIn,
+    signout
 };
