@@ -195,9 +195,10 @@ const searchProductFromServer = (query) => {
 
 const addNewProduct = (body, picture) => {
     return new Promise((resolve, reject) => {
-        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, } = body;
-        const sqlQuery = 'INSERT INTO public.products (name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 ) RETURNING *';
-        db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture])
+        const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock} = body;
+        const input_time = new Date(Date.now());
+        const sqlQuery = 'INSERT INTO public.products (name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *';
+        db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time])
         .then(({rows})=>{
             const response ={
                 data: rows[0],

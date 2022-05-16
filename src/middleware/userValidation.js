@@ -28,7 +28,7 @@ const addNewUser = (req, res, next) => {
             error: "Display name cannot be longer than 20 characters!"
         })
     }
-    if(sex !== 1 && sex !== 2){
+    if(sex !== "1" && sex !== "2"){
         return res.status(400).json({
             error: "Invalid input sex!"
         });

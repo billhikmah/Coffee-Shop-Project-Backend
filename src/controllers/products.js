@@ -2,7 +2,8 @@ const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromS
 const {errorResponse, successResponse} = require("../helpers/response");
 
 const postNewProduct  = (req, res) =>{
-    const {file = null} = req;
+    const {file} = req;
+    console.log(file)
     let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
