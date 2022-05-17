@@ -50,10 +50,27 @@ const getPassword = (email) => {
     
 };
 
+const checkAdmin = (email) => {
+    return new Promise ((resolve, reject) => {
+        const sqlQuery = "select * from public.users where email = $1";
+        db.query(sqlQuery, [email])
+        .then((result) => {
+            const response = result.rowCount;
+            resolve (response);
+        })
+        .catch((err) => {
+            reject({
+                status: 500,
+                err,
+            });
+        });
+    });
+};
 
 
 module.exports = {
     registerNewUSer,
     getEmail,
-    getPassword
+    getPassword,
+    checkAdmin
 };

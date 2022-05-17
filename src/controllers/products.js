@@ -106,7 +106,9 @@ const updateProducts  = (req, res) =>{
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
-    updateProduct(req.body, req.query, picture)
+    const {id} = req.params;
+    console.log(id);
+    updateProduct(req.body, req.params, picture)
     .then(({message, data})=>{
         res.status(201).json({
             message,

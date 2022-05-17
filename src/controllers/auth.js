@@ -1,26 +1,24 @@
 const { successResponse, errorResponse } = require("../helpers/response");
-const { registerNewUSer, getPassword } = require("../models/auth");
+const { registerNewUSer, getPassword, checkAdmin } = require("../models/auth");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = (req, res) => {
     const {password} = req.body;
     bcrypt.hash(password, 10)
-        .then((hashedPassword) => {
-            registerNewUSer(req.body, hashedPassword)
-            .then(() => {
-                successResponse(res, 201, {msg: "User successfully registered"}, null);
-            })
-            .catch((error) => {
-                const {status, err} = error;
-                errorResponse(res, status, err);
-            })
-        .catch(({status, err}) =>{
+    .then((hashedPassword) => {
+        registerNewUSer(req.body, hashedPassword)
+        .then(() => {
+            successResponse(res, 201, {msg: "User successfully registered"}, null);
+        })
+        .catch((error) => {
+            const {status, err} = error;
             errorResponse(res, status, err);
         });
-    
+    })
+    .catch(({status, err}) =>{
+        errorResponse(res, status, err);
     });
-
 };
 
 const signIn = (req, res) => {
@@ -37,17 +35,36 @@ const signIn = (req, res) => {
                 return errorResponse(res, 400, {msg: "Email or password is incorrect"});
             }
             //Generate JWT
-            const payload = {
+            const userPayload = {
                 email,
-                id
+                id,
+                user: true,
+                admin: false,
+
+            };
+            const adminPayload = {
+                email,
+                id,
+                user: true,
+                admin: true,
             };
             const jwtOptions = {
                 issuer: process.env.JWT_ISSUER,
                 expiresIn: "300000s",
             };
-            const token = jwt.sign(payload, process.env.JWT_KEY, jwtOptions);
-            //Return
-            successResponse(res, 200, {email, token}, null);
+
+            checkAdmin(email)
+            .then((result) => {
+                if(result === 1 && email === "admin1@starbills.com"){
+                    const token = jwt.sign(adminPayload, process.env.JWT_KEY, jwtOptions);
+                    return successResponse(res, 200, {email, token}, null);
+                }
+                const token = jwt.sign(userPayload, process.env.JWT_KEY, jwtOptions);
+                successResponse(res, 200, {email, token}, null);
+            })
+            .catch(({err, status})=>{
+                errorResponse(res, status, err);
+            });
         })
         .catch((status, err) => {
             errorResponse(res, status, err);

@@ -27,12 +27,23 @@ const checkToken = (req, res, next) => {
         if(err && err.name === "TokenExpiredError"){
             return errorResponse(res, 401, {msg: "Please sign in again"});
         }
+        if(err){
+            return errorResponse(res, 401, {msg: "Access denied"});
+        }
         req.userPayload = payload;
         next();
     });
 };
 
+const adminAuth = (req, res, next) => {
+    if(req.userPayload.admin !== true){
+        return errorResponse(res, 500, {msg: "You do not have permission to access."});
+    }
+    next();
+};
+
 module.exports = {
     checkRegistedEmail,
-    checkToken
+    checkToken,
+    adminAuth
 };

@@ -1,5 +1,5 @@
 const {addNewTransaction, searchTransactionsFromServer, changeTransaction, deleteTransactionFromServer } = require("../models/transactions");
-const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
+const {errorResponse, searchResponse} = require("../helpers/response");
 
 const postNewTransaction  = (req, res) =>{
     addNewTransaction(req.body, req.query)
@@ -15,7 +15,7 @@ const postNewTransaction  = (req, res) =>{
 };
 
 const searchTransaction= (req, res) => {
-    searchTransactionsFromServer(req.query)
+    searchTransactionsFromServer(req.query, req.query.id)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
         const {id, id_user, limit, page} = req.query;
@@ -116,9 +116,74 @@ const deleteTransaction  = (req, res) =>{
     });
 };
 
+const searchMyTransaction = (req, res) => {
+    searchTransactionsFromServer(req.query, req.userPayload.id)
+    .then((result) => {
+        const{totalData, totalPage, totalDataOnThisPage, data } = result; 
+        const {limit, page} = req.query;
+        const nextPage = parseInt(page) + 1;
+        const prevPage = parseInt(page) - 1;
+
+        let next = `/transactions${req.path}?`;
+        let prev = `/transactions${req.path}?`;
+
+        if(limit){
+            next += `limit=${limit}&`;
+            prev += `limit=${limit}&`;
+        }
+        if(page){
+            next += `page=${nextPage}`;
+            prev += `page=${prevPage}`;
+        }
+        if(parseInt(page) === 1 && totalPage !== 1){
+            const meta = {
+                totalData,
+                totalDataOnThisPage,
+                totalPage,
+                page: parseInt(req.query.page),
+                next,
+            };
+            return searchResponse(res, 202, data, meta);
+        }
+        if(parseInt(page) === totalPage && totalPage !== 1){
+            const meta = {
+                totalData,
+                totalDataOnThisPage,
+                totalPage,
+                page: parseInt(req.query.page),
+                prev
+            };
+            return searchResponse(res, 202, data, meta);
+        }
+        if(totalPage === 1){
+            const meta = {
+                totalData,
+                totalDataOnThisPage,
+                totalPage,
+                page: parseInt(req.query.page)
+            };
+            return searchResponse(res, 202, data, meta);
+        }
+        const meta = {
+            totalData,
+            totalDataOnThisPage,
+            totalPage,
+            page: parseInt(req.query.page),
+            next,
+            prev
+        };
+        searchResponse(res, 202, data, meta);
+        })
+    .catch(({error, status}) => {
+        errorResponse(res, status, error);
+        
+    });
+};
+
 module.exports = {
     postNewTransaction,
     searchTransaction,
     updateTransaction,
-    deleteTransaction
+    deleteTransaction,
+    searchMyTransaction
 };

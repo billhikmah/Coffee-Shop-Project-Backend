@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const bcrypt = require("bcrypt");
 
 const addNewUser = (body) => {
     return new Promise((resolve, reject) => {
@@ -81,8 +82,10 @@ const updateUser = (body, payload, picture) => {
     return new Promise((resolve, reject) => {
         const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex} = body;
         const {id} = payload;
-        let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex = COALESCE ($9, sex), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, id";
-            db.query(sqlQuery, [first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, id])
+        bcrypt.hash(password, 10)
+        .then((hashedPassword) => {
+            let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex = COALESCE ($9, sex), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, id";
+            db.query(sqlQuery, [first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex, picture, id])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({
@@ -102,6 +105,13 @@ const updateUser = (body, payload, picture) => {
                     status: 500
                 });
             });
+        })
+        .catch((error) =>{
+            reject({
+                error,
+                status: 500
+            });
+        });
     });
 };
 

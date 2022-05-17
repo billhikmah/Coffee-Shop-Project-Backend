@@ -23,9 +23,9 @@ const addNewTransaction = (body, query) => {
     
 };
 
-const searchTransactionsFromServer = (query) => {
+const searchTransactionsFromServer = (query, id_user) => {
     return new Promise((resolve, reject) => {
-        let {id_user, id, limit, page} = query;
+        let { id, limit, page} = query;
         const offset = (page - 1)*limit;
         let key;
         let sqlQuery = "SELECT * FROM public.transactions";
