@@ -16,13 +16,13 @@ const getEmail = (email) => {
     
 };
 
-const registerNewUSer = (body, password, picture) => {
+const registerNewUSer = (body, password) => {
     return new Promise ((resolve, reject) => {
-        const {first_name, last_name, display_name, email, phone, date_of_birth, address, sex} = body;
+        const {email, phone} = body;
         
-        const sqlQuery = "INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);";
+        const sqlQuery = "INSERT INTO public.users ( email, password, phone, created_at) VALUES($1, $2, $3, $4);";
             const created_at = new Date(Date.now());
-            const values = [first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at];
+            const values = [ email, password, phone, created_at];
             db.query(sqlQuery, values)
             .then(() => {
                 resolve ();

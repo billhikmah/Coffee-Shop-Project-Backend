@@ -21,7 +21,8 @@ const imageFilter = (req, file, cb) => {
     const extName = path.extname(file.originalname);
     const allowedExt = /jpeg|jpg|png/;
     if(!allowedExt.test(extName)){
-        cb(new Error("Invalid Extension"), false);
+        req.fileValidationError = {msg: "Invalid Extension"};
+        cb(null, false);
     }
     cb(null, true);
     

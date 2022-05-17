@@ -1,5 +1,5 @@
 const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer } = require("../models/products");
-const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
+const {errorResponse, searchResponse} = require("../helpers/response");
 
 const postNewProduct  = (req, res) =>{
     const {file} = req;
@@ -74,7 +74,7 @@ const searchProduct = (req, res) => {
                 page: parseInt(req.query.page),
                 prev
             };
-            return successResponse(res, 202, data, meta);
+            return searchResponse(res, 202, data, meta);
         }
         if(totalPage === 1){
             const meta = {
