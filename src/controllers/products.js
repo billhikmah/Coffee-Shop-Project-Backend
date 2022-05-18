@@ -1,23 +1,23 @@
 const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer } = require("../models/products");
 const {errorResponse, searchResponse} = require("../helpers/response");
 
-const postNewProduct  = (req, res) =>{
+const postNewProduct = (req, res) => {
     const {file} = req;
     let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     addNewProduct(req.body, picture)
-    .then(({data})=>{
+    .then(({data}) => {
         res.status(201).json({
             message: "Product Added",
-            data,
+            data
         });
     })
-    .catch(({status, error})=>{
+    .catch(({status, error}) => {
         res.status(status).json({
             error: error.message,
-            data: [],
+            data: []
         });
     });
 };
@@ -62,7 +62,7 @@ const searchProduct = (req, res) => {
                 totalDataOnThisPage,
                 totalPage,
                 page: parseInt(req.query.page),
-                next,
+                next
             };
             return searchResponse(res, 202, data, meta);
         }
@@ -100,7 +100,7 @@ const searchProduct = (req, res) => {
     });
     
 };
-const updateProducts  = (req, res) =>{
+const updateProducts = (req, res) => {
     const {file} = req;
     let picture = "";
     if(file){
@@ -109,28 +109,28 @@ const updateProducts  = (req, res) =>{
     const {id} = req.params;
     console.log(id);
     updateProduct(req.body, req.params, picture)
-    .then(({message, data})=>{
+    .then(({message, data}) => {
         res.status(201).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });
     });
 };
 
-const deleteProduct  = (req, res) =>{
+const deleteProduct = (req, res) => {
     deleteProductFromServer(req.query)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(200).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });

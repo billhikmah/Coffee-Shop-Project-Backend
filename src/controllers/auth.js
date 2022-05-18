@@ -16,7 +16,7 @@ const register = (req, res) => {
             errorResponse(res, status, err);
         });
     })
-    .catch(({status, err}) =>{
+    .catch(({status, err}) => {
         errorResponse(res, status, err);
     });
 };
@@ -39,18 +39,18 @@ const signIn = (req, res) => {
                 email,
                 id,
                 user: true,
-                admin: false,
+                admin: false
 
             };
             const adminPayload = {
                 email,
                 id,
                 user: true,
-                admin: true,
+                admin: true
             };
             const jwtOptions = {
                 issuer: process.env.JWT_ISSUER,
-                expiresIn: "300000s",
+                expiresIn: "300000s"
             };
 
             checkAdmin(email)
@@ -62,7 +62,7 @@ const signIn = (req, res) => {
                 const token = jwt.sign(userPayload, process.env.JWT_KEY, jwtOptions);
                 successResponse(res, 200, {email, token}, null);
             })
-            .catch(({err, status})=>{
+            .catch(({err, status}) => {
                 errorResponse(res, status, err);
             });
         })

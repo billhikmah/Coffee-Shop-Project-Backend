@@ -6,7 +6,7 @@ const imageUpload = require("../middleware/upload");
 const validate = require("../middleware/userValidation");
 
 //Register
-Router.post("/new", imageUpload.single("picture"), validate.addNewUser, authValidation.checkRegistedEmail,  authController.register);
+Router.post("/new", imageUpload.single("picture"), validate.addNewUser, authValidation.checkRegistedEmail, authController.register);
 
 //Sign In
 Router.post("/", authController.signIn);

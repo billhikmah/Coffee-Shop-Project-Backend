@@ -34,21 +34,22 @@ const searchProduct = (req, res, next) => {
 const addNewProduct = (req, res, next) => {
     const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body;
     const validateQuery = Object.keys(req.body).filter(
-        (key) =>
-            key === "name" || key === "price" || key === "id_category" ||
-            key === "id_delivery_method" || key === "id_size" || key === "stock"
+        (key) => {
+return key === "name" || key === "price" || key === "id_category" ||
+            key === "id_delivery_method" || key === "id_size" || key === "stock";
+}
     );
 
     if(validateQuery.length < 6){
         return res.status(400).json({
             error: "New product input must contain name, id_size, price, id_category, id_delivery_method, and stock",
-            added_input: validateQuery,
+            added_input: validateQuery
         });
     }
     if(name.length >= 40){
         return res.status(400).json({
             error: "Name cannot be longer than 40 characters!"
-        })
+        });
     }
     if(id_size < 1 || id_size > 7){
         return res.status(400).json({
@@ -58,7 +59,7 @@ const addNewProduct = (req, res, next) => {
     if(price.length > 6){
         return res.status(400).json({
             error: "Price cannot be longer than 6 characters!"
-        })
+        });
     }
     if(id_category < 1 || id_category > 3){
         return res.status(400).json({
@@ -69,7 +70,7 @@ const addNewProduct = (req, res, next) => {
         if(description.length >= 120){
             return res.status(400).json({
                 error: "Description cannot be longer than 120 characters!"
-            })
+            });
         }
     }
     if(id_delivery_method < 1 || id_delivery_method > 3){
@@ -88,7 +89,7 @@ const updateProduct = (req, res, next) => {
         if(name.length > 40){
             return res.status(400).json({
                 error: "Name cannot be longer than 40 characters!"
-            })
+            });
         }
     }
     if(id_size){
@@ -102,7 +103,7 @@ const updateProduct = (req, res, next) => {
         if(price.length > 6){
             return res.status(400).json({
                 error: "Price cannot be longer than 6 characters!"
-            })
+            });
         }
     }
     if(id_category){
@@ -117,7 +118,7 @@ const updateProduct = (req, res, next) => {
             if(description.length > 120){
                 return res.status(400).json({
                     error: "Description cannot be longer than 40 characters!"
-                })
+                });
             }
         }
     }

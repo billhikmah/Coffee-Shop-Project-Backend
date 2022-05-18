@@ -1,15 +1,15 @@
 const {addNewTransaction, searchTransactionsFromServer, changeTransaction, deleteTransactionFromServer } = require("../models/transactions");
 const {errorResponse, searchResponse} = require("../helpers/response");
 
-const postNewTransaction  = (req, res) =>{
+const postNewTransaction = (req, res) => {
     addNewTransaction(req.body, req.query)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
-            data,
+            data
         });
     })
-    .catch(({status, error})=>{
+    .catch(({status, error}) => {
         errorResponse(res, status, error);
     });
 };
@@ -47,7 +47,7 @@ const searchTransaction= (req, res) => {
                 totalDataOnThisPage,
                 totalPage,
                 page: parseInt(req.query.page),
-                next,
+                next
             };
             return searchResponse(res, 202, data, meta);
         }
@@ -86,30 +86,30 @@ const searchTransaction= (req, res) => {
     });
 };
 
-const updateTransaction  = (req, res) =>{
+const updateTransaction = (req, res) => {
     changeTransaction(req.body, req.query)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });
     });
 };
 
-const deleteTransaction  = (req, res) =>{
+const deleteTransaction = (req, res) => {
     deleteTransactionFromServer(req.body)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(200).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });
@@ -141,7 +141,7 @@ const searchMyTransaction = (req, res) => {
                 totalDataOnThisPage,
                 totalPage,
                 page: parseInt(req.query.page),
-                next,
+                next
             };
             return searchResponse(res, 202, data, meta);
         }

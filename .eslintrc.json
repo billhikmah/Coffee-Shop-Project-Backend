@@ -9,6 +9,19 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "semi" : ["error", "always"]
+        "semi" : ["error", "always"],
+        "comma-dangle" : ["error", "never"],
+        "eol-last": ["error", "always"],
+        "arrow-body-style": ["error", "always"],
+        "eqeqeq": ["error", "always"],
+        "array-bracket-newline" : ["error", { "multiline": true, "minItems": 2 }],
+        "array-bracket-spacing" : ["error", "always", {"singleValue": false, "objectsInArrays": false, "arraysInArrays": false}],
+        "arrow-spacing" : ["error", { "before": true, "after": true }],
+        "arrow-parens" : ["error", "always"],
+        "block-spacing" : ["error", "never"],
+        "brace-style" : ["error", "1tbs"],
+        "comma-spacing" : ["error", { "before": false, "after": true }],
+        "no-multi-spaces": ["error"],
+        "no-unused-vars": ["off"]
     }
 }

@@ -1,24 +1,24 @@
 const {addNewUser, searchUserFromServer, updateUser, deleteAccountFromServer, getUser} = require("../models/users");
 const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
 
-const postNewUser  = (req, res) =>{
+const postNewUser = (req, res) => {
     addNewUser(req.body)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
-            data,
+            data
         });
     })
-    .catch(({status, error})=>{
+    .catch(({status, error}) => {
         res.status(status).json({
             error: error.message,
-            data: [],
+            data: []
         });
     });
 };
-const searchUser  = (req, res) =>{
+const searchUser = (req, res) => {
     searchUserFromServer(req.query)
-    .then((result)=>{
+    .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
         const {name, id, limit, page} = req.query;
         const nextPage = parseInt(page) + 1;
@@ -49,7 +49,7 @@ const searchUser  = (req, res) =>{
                 totalDataOnThisPage,
                 totalPage,
                 page: parseInt(req.query.page),
-                next,
+                next
             };
             return searchResponse(res, 202, data, meta);
         }
@@ -82,12 +82,12 @@ const searchUser  = (req, res) =>{
         };
         searchResponse(res, 202, data, meta);
     })
-    .catch(({status, error})=>{
+    .catch(({status, error}) => {
         errorResponse(res, status, error);
     });
 };
 
-const updateAccount  = (req, res) =>{
+const updateAccount = (req, res) => {
     const payload = req.userPayload;
     const {file = null} = req;
     let picture;
@@ -95,13 +95,13 @@ const updateAccount  = (req, res) =>{
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     updateUser(req.body, payload, picture)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
             data
         });
     })
-    .catch((err)=>{
+    .catch((err) => {
         const {error, status} = err;
         res.status(status).json({
             error
@@ -109,15 +109,15 @@ const updateAccount  = (req, res) =>{
     });
 };
 
-const deleteAccount  = (req, res) =>{
+const deleteAccount = (req, res) => {
     deleteAccountFromServer(req.query)
-    .then(({message, data})=>{
+    .then(({message, data}) => {
         res.status(200).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });

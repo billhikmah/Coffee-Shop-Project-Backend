@@ -1,23 +1,23 @@
 const {addNewPromo, searchPromosFromServer, updatePromo, deletePromoFromServer } = require("../models/promos");
-const {errorResponse, successResponse, searchResponse} = require("../helpers/response");
+const {errorResponse, searchResponse} = require("../helpers/response");
 
-const postNewPromo  = (req, res) =>{
+const postNewPromo = (req, res) => {
     const {file = null} = req;
     let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     addNewPromo(req.body, picture)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
-            data,
+            data
         });
     })
-    .catch(({status, error})=>{
+    .catch(({status, error}) => {
         res.status(status).json({
             error: error.message,
-            data: [],
+            data: []
         });
     });
 };
@@ -47,7 +47,7 @@ const searchPromos = (req, res) => {
                 totalDataOnThisPage,
                 totalPage,
                 page: parseInt(req.query.page),
-                next,
+                next
             };
             return searchResponse(res, 202, data, meta);
         }
@@ -85,35 +85,35 @@ const searchPromos = (req, res) => {
     });
 };
 
-const updatePromos  = (req, res) =>{
+const updatePromos = (req, res) => {
     const {file = null} = req;
     let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     updatePromo(req.query, req.body, picture)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(201).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });
     });
 };
 
-const deletePromo  = (req, res) =>{
+const deletePromo = (req, res) => {
     deletePromoFromServer(req.body)
-    .then(({data, message})=>{
+    .then(({data, message}) => {
         res.status(200).json({
             message,
             data
         });
     })
-    .catch(({error, status})=>{
+    .catch(({error, status}) => {
         res.status(status).json({
             error
         });

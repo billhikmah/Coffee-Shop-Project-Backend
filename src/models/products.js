@@ -20,12 +20,14 @@ const searchProductFromServer = (query) => {
                     const totalData = result.rowCount;
                     transactionsQuery += " where p.id_category = $1 group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $2 offset $3";
                     
-                    return db.query(transactionsQuery, [id_category, limit, offset])
+                    return db.query(transactionsQuery, [
+id_category, limit, offset
+])
                     .then((result) => {
                         if(result.rowCount === 0){
                             return reject({
                                 error: "Menu Not Found",
-                                status: 404,
+                                status: 404
                             });
                         }
     
@@ -60,12 +62,14 @@ const searchProductFromServer = (query) => {
                 const totalData = result.rowCount;
                 transactionsQuery += " group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $1 offset $2";
 
-                return db.query(transactionsQuery, [limit, offset])
+                return db.query(transactionsQuery, [
+limit, offset
+])
                 .then((result) => {
                     if(result.rowCount === 0){
                         return reject({
                             error: "Menu Not Found",
-                            status: 404,
+                            status: 404
                         });
                     }
 
@@ -112,12 +116,14 @@ const searchProductFromServer = (query) => {
                 const totalData = parseInt(result.rows[0].count);
                 productsQuery += " limit $2 offset $3";
 
-                return db.query(productsQuery, [name, limit, offset])
+                return db.query(productsQuery, [
+name, limit, offset
+])
                 .then((result) => {
                     if(result.rowCount === 0){
                         return reject({
                             error: "Menu Not Found",
-                            status: 404,
+                            status: 404
                         });
                     }
 
@@ -158,12 +164,14 @@ const searchProductFromServer = (query) => {
         .then((result) => {
             const totalData = parseInt(result.rows[0].count);
 
-            return db.query(productsQuery, [limit, offset])
+            return db.query(productsQuery, [
+limit, offset
+])
                 .then((result) => {
                     if(result.rows.length === 0){
                         return reject({
                             error: "Menu Not Found",
-                            status: 404,
+                            status: 404
                         });
                     }
                     
@@ -198,17 +206,19 @@ const addNewProduct = (body, picture) => {
         const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock} = body;
         const input_time = new Date(Date.now());
         const sqlQuery = 'INSERT INTO public.products (name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *';
-        db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time])
-        .then(({rows})=>{
+        db.query(sqlQuery, [
+name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture, input_time
+])
+        .then(({rows}) => {
             const response ={
-                data: rows[0],
+                data: rows[0]
             };
             resolve(response);
         })
-        .catch((error)=>{
+        .catch((error) => {
             reject({
                 status: 500,
-                error,
+                error
             });
         });
     });
@@ -220,12 +230,14 @@ const updateProduct = (body, query, picture) => {
         const {id} = query;
         const input_time = new Date(Date.now());
         let sqlQuery = "UPDATE public.products set name = COALESCE ($1, name), id_size  = COALESCE ($2, id_size), price  = COALESCE ($3, price), id_category  = COALESCE ($4, id_category), description  = COALESCE ($5, description), id_delivery_method  = COALESCE ($6, id_delivery_method), stock  = COALESCE ($7, stock), picture  = COALESCE ($8, picture), start_hour = COALESCE ($9, start_hour), end_hour = coalesce ($10,end_hour), input_time = coalesce ($11, input_time) WHERE id = $12 returning *";
-            db.query(sqlQuery, [name, id_size, price, id_category, description, id_delivery_method, stock, picture, start_hour, end_hour, input_time, id])
+            db.query(sqlQuery, [
+name, id_size, price, id_category, description, id_delivery_method, stock, picture, start_hour, end_hour, input_time, id
+])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({
                         error: "Id Not Found!",
-                        status: 400,
+                        status: 400
                     });
                 }
                 const response = {
@@ -252,7 +264,7 @@ const deleteProductFromServer = (query) => {
             if(rows.length === 0){
                 return reject({
                     error: "Product Id Not Found!",
-                    status: 400,
+                    status: 400
                 });
             }
             const response = {
@@ -265,7 +277,7 @@ const deleteProductFromServer = (query) => {
         .catch((error) => {
             reject({
                 error,
-                status: 500,
+                status: 500
             });
         });
     });

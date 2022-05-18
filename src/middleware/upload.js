@@ -9,12 +9,12 @@ const imageStorage = multer.diskStorage({
         const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
         const filename = `${file.fieldname}-${suffix}${path.extname(file.originalname)}`;
         cb(null, filename);
-    },
+    }
 });
 
 const limit = {
     fileSize: 2e6,
-    files: 1,
+    files: 1
 };
 
 const imageFilter = (req, file, cb) => {
