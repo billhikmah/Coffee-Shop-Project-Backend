@@ -5,9 +5,7 @@ const addNewTransaction = (body, query) => {
         const {id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = body;
         const {id_user} = query;
         const sqlQuery = 'INSERT INTO public.transactions (id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
-        db.query(sqlQuery, [
-id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address
-])
+        db.query(sqlQuery, [ id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address ])
         .then(({rows}) => {
             const response ={
                 message: "Transaction added",
@@ -48,9 +46,7 @@ const searchTransactionsFromServer = (query, id_user) => {
         .then((result) => {
             const totalData = parseInt(result.rows[0].count);
 
-            return db.query(sqlQuery, [
-key, limit, offset
-])
+            return db.query(sqlQuery, [ key, limit, offset ])
                 .then((result) => {
                     if(result.rows.length === 0){
                         return reject({
@@ -89,9 +85,7 @@ const changeTransaction = (body, query) => {
         const {id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = body;
         const {id} = query;
         let sqlQuery = "UPDATE public.transactions set id_user = COALESCE ($1, id_user), id_product  = COALESCE ($2, id_product), qty  = COALESCE ($3, qty), id_total  = COALESCE ($4, id_total), id_delivery  = COALESCE ($5, id_delivery), time  = COALESCE ($6, time), date  = COALESCE ($7, date), id_payment_methods  = COALESCE ($8, id_payment_methods), address = COALESCE ($9, address) WHERE id = $10 returning *";
-            db.query(sqlQuery, [
-id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address, id
-])
+            db.query(sqlQuery, [ id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address, id ])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({

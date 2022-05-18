@@ -6,9 +6,7 @@ const addNewUser = (body) => {
         const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture} = body;
         const sqlQuery = 'INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, created_at';
         const created_at = new Date();
-        db.query(sqlQuery, [
-first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at
-])
+        db.query(sqlQuery, [ first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at ])
         .then(({rows}) => {
             const response ={
                 data: rows[0],
@@ -49,9 +47,7 @@ const searchUserFromServer = (query) => {
         .then((result) => { 
             const totalData = parseInt(result.rows[0].count);
 
-            return db.query(sqlQuery, [
-keyword, limit, offset
-])
+            return db.query(sqlQuery, [ keyword, limit, offset ])
             .then((result) => {
                 if(result.rows.length === 0){
                     return reject({
@@ -89,9 +85,7 @@ const updateUser = (body, payload, picture) => {
         bcrypt.hash(password, 10)
         .then((hashedPassword) => {
             let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex = COALESCE ($9, sex), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, id";
-            db.query(sqlQuery, [
-first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex, picture, id
-])
+            db.query(sqlQuery, [ first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex, picture, id ])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({
