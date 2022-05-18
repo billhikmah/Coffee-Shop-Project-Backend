@@ -54,7 +54,7 @@ const getPassword = (email) => {
 
 const checkAdmin = (email) => {
     return new Promise ((resolve, reject) => {
-        const sqlQuery = "select * from public.users where email = $1";
+        const sqlQuery = "select * from public.admin where email = $1";
         db.query(sqlQuery, [email])
         .then((result) => {
             const response = result.rowCount;

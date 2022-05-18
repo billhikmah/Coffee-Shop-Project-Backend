@@ -55,7 +55,7 @@ const signIn = (req, res) => {
 
             checkAdmin(email)
             .then((result) => {
-                if(result === 1 && email === "admin1@starbills.com"){
+                if(result === 1){
                     const token = jwt.sign(adminPayload, process.env.JWT_KEY, jwtOptions);
                     return successResponse(res, 200, {email, token}, null);
                 }
