@@ -1,164 +1,78 @@
 const db = require("../config/db");
 
-const searchProductFromServer = (query) => {
+const searchProductFromServer = (data) => {
     return new Promise((resolve, reject) => {
-        const {name, id_category, sort, order = "asc", page = 1, limit = 5} = query;
+        const {name, id_category, sort = "id", order = "asc", page = 1, limit = 5} = data;
         const offset = (page - 1)*limit;
         
         let totalQuery = "select count(*) from public.products p";
-        let productsQuery = "SELECT p.id, p.name, s.name as \"size\", p.price, c.name as \"category\", d.name as \"delivery method\", p.start_hour as \"start hour\", p.end_hour \"end hour\", p.stock, p.picture, p.input_time FROM public.products p join public.size s on p.id_size = s.id join public.category c on p.id_category = c.id join public.delivery d on p.id_delivery_method = d.id";
-        let transactionsQuery = "SELECT t.id_product, p.name, count(t.id_product) as \"order total\", c.name as \"category\" FROM public.transactions t join products p on t.id_product = p.id join category c on p.id_category = c.id";
+        let query = "SELECT p.id, p.name, s.name as \"size\", p.price, c.name as \"category\", d.name as \"delivery method\", p.start_hour as \"start hour\", p.end_hour \"end hour\", p.stock, p.picture, p.input_time FROM public.products p join public.size s on p.id_size = s.id join public.category c on p.id_category = c.id join public.delivery d on p.id_delivery_method = d.id";
+        let totalQueryValues;
+        let queryValues;
 
         if(sort === "favorites"){
-            totalQuery = "SELECT count(t.id_user), t.id_product  FROM public.transactions t join public.products p on p.id = t.id_product";
+        query = "SELECT t.id_product, p.name, count(t.id_product) as \"order total\", c.name as \"category\" FROM public.transactions t join products p on t.id_product = p.id join category c on p.id_category = c.id";
+        totalQuery = "SELECT count(*), t.id_product  FROM public.transactions t join public.products p on p.id = t.id_product";
 
             if(id_category){
                 totalQuery += " where p.id_category = $1 group by id_product";
+                totalQueryValues = [id_category];
 
-                return db.query(totalQuery, [id_category])
-                .then((result) => {
-                    const totalData = result.rowCount;
-                    transactionsQuery += " where p.id_category = $1 group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $2 offset $3";
-                    
-                    return db.query(transactionsQuery, [ id_category, limit, offset ])
-                    .then((result) => {
-                        if(result.rowCount === 0){
-                            return reject({
-                                error: "Menu Not Found",
-                                status: 404
-                            });
-                        }
-    
-                        const response = {
-                            totalData,
-                            totalPage: Math.ceil(totalData/limit),
-                            totalDataOnThisPage: result.rowCount,
-                            data: result.rows
-                        };
-    
-                        return resolve(response);
-                    })
-                    .catch((error) => {
-                        return reject({
-                            error,
-                            status: 500
-                        });
-                    });
-                })
-                .catch((error) => {
-                    return reject({
-                        error,
-                        status: 500
-                    });
-                });
+                query += " where p.id_category = $1 group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $2 offset $3";
+                queryValues = [ id_category, limit, offset ];
             }
-
-            totalQuery += " group by id_product ";
-
-            return db.query(totalQuery)
-            .then((result) => {
-                const totalData = result.rowCount;
-                transactionsQuery += " group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $1 offset $2";
-
-                return db.query(transactionsQuery, [ limit, offset ])
-                .then((result) => {
-                    if(result.rowCount === 0){
-                        return reject({
-                            error: "Menu Not Found",
-                            status: 404
-                        });
-                    }
-
-                    const totalPage = totalData/limit;
-                    const response = {
-                        totalData,
-                        totalPage: Math.ceil(totalPage),
-                        totalDataOnThisPage: result.rowCount,
-                        data: result.rows
-                    };
-
-                    return resolve(response);
-                })
-                .catch((error) => {
-                    return reject({
-                        error,
-                        status: 500
-                    });
-                });
-            })
-            .catch((error) => {
-                return reject({
-                    error,
-                    status: 500
-                });
-            });
-
+            if(!id_category){
+                totalQuery += " group by id_product ";
+                totalQueryValues = [];
+                
+                query += " group by t.id_product, p.\"name\", c.name order by \"order total\" " + order + " limit $1 offset $2";
+                queryValues = [ limit, offset ];
+            }
         }
-
-        if(name){
-            productsQuery += " where lower(p.name) like lower('%' || $1 || '%')";
-            totalQuery += " where lower(p.name) like lower('%' || $1 || '%')";
-
+        if(sort !== "favorites" && name){
             if(id_category){
-                productsQuery += " AND p.id_category = " + id_category;
-                totalQuery += " AND p.id_category = " + id_category;
+                totalQuery += " where lower(p.name) like lower('%' || $1 || '%') AND p.id_category = $2";
+                totalQueryValues = [ name, id_category ];
+                
+                query += " where lower(p.name) like lower('%' || $1 || '%') AND p.id_category = $2 order by " + sort + " " + order + " limit $3 offset $4";
+                queryValues = [ name, id_category, limit, offset ];                
             }
-            if(sort){
-                productsQuery += " order by " + sort + " " + order;
+            if(!id_category){
+                totalQuery += " where lower(p.name) like lower('%' || $1 || '%')";
+                totalQueryValues = [name];
+
+                query += " where lower(p.name) like lower('%' || $1 || '%')  limit $2 offset $3";
+                queryValues = [ name, limit, offset ];
             }
+        }
+        if(sort !== "favorites" && !name){
+            if(id_category){
+                totalQuery += " where p.id_category = $1";
+                totalQueryValues = [id_category];
 
-            return db.query(totalQuery, [name])
-            .then((result) => {
-                const totalData = parseInt(result.rows[0].count);
-                productsQuery += " limit $2 offset $3";
+                query += " where p.id_category = $1 order by " + sort + " " + order + " limit $2 offset $3";
+                queryValues = [ id_category, limit, offset ];
+            }
+            if(!id_category){
+                totalQueryValues = [];
 
-                return db.query(productsQuery, [ name, limit, offset ])
-                .then((result) => {
-                    if(result.rowCount === 0){
-                        return reject({
-                            error: "Menu Not Found",
-                            status: 404
-                        });
-                    }
-
-                    const totalPage = totalData/limit;
-                    const response = {
-                        totalData,
-                        totalPage: Math.ceil(totalPage),
-                        totalDataOnThisPage: result.rowCount,
-                        data: result.rows
-                    };
-
-                    return resolve(response);
-                })
-                .catch((error) => {
-                    return reject({
-                        error,
-                        status: 500
-                    });
-                });
-            })
-            .catch((error) => {
-                return reject({
-                    error,
-                    status: 500
-                });
-            });
+                query += " order by " + sort + " " + order + " limit $1 offset $2";
+                queryValues = [ limit, offset ];
+            }
         }
 
-        if(id_category){
-            totalQuery += " where p.id_category = " + id_category;
-            productsQuery += " where p.id_category = " + id_category;
-        }
-        if(sort){
-            productsQuery += " order by " + sort + " " + order + " limit $1 offset $2";
-        }
-        
-        return db.query(totalQuery)
+        return db.query(totalQuery, totalQueryValues)
         .then((result) => {
-            const totalData = parseInt(result.rows[0].count);
+            let totalData;
+            if(sort === "favorites"){
+                totalData = parseInt(result.rowCount);
+            }
+            if(sort !== "favorites"){
+                totalData = parseInt(result.rows[0].count);
+            }
+            
 
-            return db.query(productsQuery, [ limit, offset ])
+            return db.query(query, queryValues)
                 .then((result) => {
                     if(result.rows.length === 0){
                         return reject({

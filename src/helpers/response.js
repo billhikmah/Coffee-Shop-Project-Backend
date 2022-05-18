@@ -14,8 +14,7 @@ const errorResponse = (res, status, err) => {
 const searchResponse = (res, status, data, meta) => {
     res.status(status).json({
         data,
-        meta,
-        err: null
+        meta
     });
 };
 

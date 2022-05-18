@@ -26,70 +26,36 @@ const searchProduct = (req, res) => {
     searchProductFromServer(req.query)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
-        const {name, sort, order, id_category, limit, page} = req.query;
+        const {name, sort = "id", order = "asc", id_category, limit = 5, page = 1} = req.query;
         const nextPage = parseInt(page) + 1;
         const prevPage = parseInt(page) - 1;
 
-        let next = `/products${req.path}?`;
-        let prev = `/products${req.path}?`;
+        let next = `/products${req.path}?sort=${sort}&order=${order}&limit=${limit}&page=${nextPage}&`;
+        let prev = `/products${req.path}?sort=${sort}&order=${order}&limit=${limit}&page=${prevPage}&`;
         if(name){
             next += `name=${name}&`;
             prev += `name=${name}&`;
         }
-        if(sort){
-            next += `sort=${sort}&`;
-            prev += `sort=${sort}&`;
-        }
-        if(order){
-            next += `order=${order}&`;
-            prev += `order=${order}&`;
-        }
         if(id_category){
-            next += `id_category=${id_category}&`;
-            prev += `id_category=${id_category}&`;
+            next += `id_category=${id_category}`;
+            prev += `id_category=${id_category}`;
         }
-        if(limit){
-            next += `limit=${limit}&`;
-            prev += `limit=${limit}&`;
-        }
-        if(page){
-            next += `page=${nextPage}`;
-            prev += `page=${prevPage}`;
-        }
+
         if(parseInt(page) === 1 && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                next
-            };
-            return searchResponse(res, 202, data, meta);
+            prev = null;
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                prev
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
         }
         if(totalPage === 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page)
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
+            prev = null;
         }
         const meta = {
             totalData,
             totalDataOnThisPage,
             totalPage,
-            page: parseInt(req.query.page),
+            page: parseInt(page),
             next,
             prev
         };
