@@ -19,30 +19,30 @@ const searchProductFromServer = (data) => {
                 totalQueryValues = [category_id];
 
                 query += " where p.category_id = $1 group by t.product_id, p.\"name\", c.name order by \"order total\" " + order + " limit $2 offset $3";
-                queryValues = [ category_id, limit, offset ];
+                queryValues = [category_id, limit, offset];
             }
             if(!category_id){
                 totalQuery += " group by product_id ";
                 totalQueryValues = [];
                 
                 query += " group by t.product_id, p.\"name\", c.name order by \"order total\" " + order + " limit $1 offset $2";
-                queryValues = [ limit, offset ];
+                queryValues = [limit, offset];
             }
         }
         if(sort !== "favorites" && name){
             if(category_id){
                 totalQuery += " where lower(p.name) like lower('%' || $1 || '%') AND p.category_id = $2";
-                totalQueryValues = [ name, category_id ];
+                totalQueryValues = [name, category_id];
                 
                 query += " where lower(p.name) like lower('%' || $1 || '%') AND p.category_id = $2 order by " + sort + " " + order + " limit $3 offset $4";
-                queryValues = [ name, category_id, limit, offset ];                
+                queryValues = [name, category_id, limit, offset];                
             }
             if(!category_id){
                 totalQuery += " where lower(p.name) like lower('%' || $1 || '%')";
                 totalQueryValues = [name];
 
                 query += " where lower(p.name) like lower('%' || $1 || '%')  limit $2 offset $3";
-                queryValues = [ name, limit, offset ];
+                queryValues = [name, limit, offset];
             }
         }
         if(sort !== "favorites" && !name){
@@ -51,13 +51,13 @@ const searchProductFromServer = (data) => {
                 totalQueryValues = [category_id];
 
                 query += " where p.category_id = $1 order by " + sort + " " + order + " limit $2 offset $3";
-                queryValues = [ category_id, limit, offset ];
+                queryValues = [category_id, limit, offset];
             }
             if(!category_id){
                 totalQueryValues = [];
 
                 query += " order by " + sort + " " + order + " limit $1 offset $2";
-                queryValues = [ limit, offset ];
+                queryValues = [limit, offset];
             }
         }
 
@@ -112,7 +112,7 @@ const addNewProduct = (body, picture) => {
         const {name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock} = body;
         const input_time = new Date(Date.now());
         const sqlQuery = 'INSERT INTO public.products (name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture, input_time) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *';
-        db.query(sqlQuery, [ name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture, input_time ])
+        db.query(sqlQuery, [name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture, input_time])
         .then(({rows}) => {
             const response ={
                 data: rows[0]
@@ -134,7 +134,7 @@ const updateProduct = (body, query, picture) => {
         const {id} = query;
         const input_time = new Date(Date.now());
         let sqlQuery = "UPDATE public.products set name = COALESCE ($1, name), size_id  = COALESCE ($2, size_id), price  = COALESCE ($3, price), category_id  = COALESCE ($4, category_id), description  = COALESCE ($5, description), delivery_method_id  = COALESCE ($6, delivery_method_id), stock  = COALESCE ($7, stock), picture  = COALESCE ($8, picture), start_hour = COALESCE ($9, start_hour), end_hour = coalesce ($10,end_hour), input_time = coalesce ($11, input_time) WHERE id = $12 returning *";
-            db.query(sqlQuery, [ name, size_id, price, category_id, description, delivery_method_id, stock, picture, start_hour, end_hour, input_time, id ])
+            db.query(sqlQuery, [name, size_id, price, category_id, description, delivery_method_id, stock, picture, start_hour, end_hour, input_time, id])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({

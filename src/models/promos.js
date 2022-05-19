@@ -4,7 +4,7 @@ const addNewPromo = (body, picture) => {
     return new Promise((resolve, reject) => {
         const {name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code} = body;
         const sqlQuery = 'INSERT INTO public.promos (name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *';
-        db.query(sqlQuery, [ name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture ])
+        db.query(sqlQuery, [name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture])
         .then(({rows}) => {
             const response ={
                 message: "Promo added",
@@ -33,7 +33,7 @@ const searchPromosFromServer = (query) => {
         .then((result) => {
             const totalData = parseInt(result.rows[0].count);
 
-            db.query(sqlQuery, [ keyword, limit, offset ])
+            db.query(sqlQuery, [keyword, limit, offset])
             .then((result) => {
                 if(result.rows.length === 0){
                     return reject({
@@ -72,7 +72,7 @@ const updatePromo = (query, body, picture) => {
         const {name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, product_id} = body;
         const {id} = query;
         let sqlQuery = "UPDATE public.promos set name = COALESCE ($1, name), price  = COALESCE ($2, price), description  = COALESCE ($3, description), size_id  = COALESCE ($4, size_id), delivery_method_id  = COALESCE ($5, delivery_method_id), disc  = COALESCE ($6, disc), start_date  = COALESCE ($7, start_date), end_date  = COALESCE ($8, end_date), coupon_code = COALESCE ($9, coupon_code), picture = coalesce ($10,picture), product_id = coalesce ($11, product_id) WHERE id = $12 returning *";
-        db.query(sqlQuery, [ name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture, product_id, id ])
+        db.query(sqlQuery, [name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture, product_id, id])
         .then(({rows}) => {
             if(rows.length === 0){
                 return reject({

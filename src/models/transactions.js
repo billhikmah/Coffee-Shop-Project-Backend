@@ -5,7 +5,7 @@ const addNewTransaction = (body, query) => {
         const {product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
         const {user_id} = query;
         const sqlQuery = 'INSERT INTO public.transactions (user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
-        db.query(sqlQuery, [ user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address ])
+        db.query(sqlQuery, [user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address])
         .then(({rows}) => {
             const response ={
                 message: "Transaction added",
@@ -34,13 +34,13 @@ const searchTransactionsFromServer = (query, user_id) => {
         
         if(user_id){
             metaKey = [user_id];
-            key = [ user_id, limit, offset ];
+            key = [user_id, limit, offset];
             sqlQuery += " where user_id = $1 limit $2 offset $3";
             metaQuery += " where user_id = $1";
         }
         if(id){
             metaKey = [id];
-            key = [ id, limit, offset ];
+            key = [id, limit, offset];
             sqlQuery += " where id = $1 limit $2 offset $3";
             metaQuery += " where id = $1";
         }
@@ -87,7 +87,7 @@ const changeTransaction = (body, query) => {
         const {user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
         const {id} = query;
         let sqlQuery = "UPDATE public.transactions set user_id = COALESCE ($1, user_id), product_id  = COALESCE ($2, product_id), qty  = COALESCE ($3, qty), total_price  = COALESCE ($4, total_price), delivery_method_id  = COALESCE ($5, delivery_method_id), time  = COALESCE ($6, time), date  = COALESCE ($7, date), payment_method_id  = COALESCE ($8, payment_method_id), address = COALESCE ($9, address) WHERE id = $10 returning *";
-            db.query(sqlQuery, [ user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, id ])
+            db.query(sqlQuery, [user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, id])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({

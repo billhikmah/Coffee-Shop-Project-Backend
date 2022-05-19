@@ -6,7 +6,7 @@ const addNewUser = (body) => {
         const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture} = body;
         const sqlQuery = 'INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, created_at';
         const created_at = new Date();
-        db.query(sqlQuery, [ first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture, created_at ])
+        db.query(sqlQuery, [first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture, created_at])
         .then(({rows}) => {
             const response ={
                 data: rows[0],
@@ -30,13 +30,13 @@ const searchUserFromServer = (query) => {
         const offset = (page - 1)*limit;
         let sqlQuery = "SELECT id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture FROM public.users where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%') limit $2 offset $3";
         let metaQuery ="select count(*) from public.users where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%')";
-        let sqlQueryValues= [ name, limit, offset ];
+        let sqlQueryValues= [name, limit, offset];
         let metaQueryValues = [name];
 
         if(id){
             sqlQuery = "SELECT id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture FROM public.users where id = $1 limit $2 offset $3";
             metaQuery = "select count(*) from public.users where id = $1";
-            sqlQueryValues= [ id, limit, offset ];
+            sqlQueryValues= [id, limit, offset];
             metaQueryValues = [id];
         }
 
@@ -81,7 +81,7 @@ const updateUser = (body, payload, picture) => {
         bcrypt.hash(password, 10)
         .then((hashedPassword) => {
             let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex_id = COALESCE ($9, sex_id), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id";
-            db.query(sqlQuery, [ first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex_id, picture, id ])
+            db.query(sqlQuery, [first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex_id, picture, id])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({

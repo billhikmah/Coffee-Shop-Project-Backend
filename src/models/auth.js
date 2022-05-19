@@ -22,7 +22,7 @@ const registerNewUSer = (body, password) => {
         
         const sqlQuery = "INSERT INTO public.users ( email, password, phone, created_at) VALUES($1, $2, $3, $4);";
             const created_at = new Date(Date.now());
-            const values = [ email, password, phone, created_at ];
+            const values = [email, password, phone, created_at];
             db.query(sqlQuery, values)
             .then(() => {
                 resolve ();

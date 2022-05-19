@@ -15,7 +15,7 @@
         "arrow-body-style": ["error", "always"],
         "eqeqeq": ["error", "always"],
         "array-bracket-newline" : ["error", "never"],
-        "array-bracket-spacing" : ["error", "always", {"singleValue": false, "objectsInArrays": false, "arraysInArrays": false}],
+        "array-bracket-spacing" : ["error", "never"],
         "arrow-spacing" : ["error", { "before": true, "after": true }],
         "arrow-parens" : ["error", "always"],
         "block-spacing" : ["error", "never"],
