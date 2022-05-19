@@ -26,7 +26,7 @@ const searchProduct = (req, res) => {
     searchProductFromServer(req.query)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
-        const {name, sort = "id", order = "asc", id_category, limit = 5, page = 1} = req.query;
+        const {name, sort = "id", order = "asc", category_id, limit = 5, page = 1} = req.query;
         const nextPage = parseInt(page) + 1;
         const prevPage = parseInt(page) - 1;
 
@@ -36,9 +36,9 @@ const searchProduct = (req, res) => {
             next += `name=${name}&`;
             prev += `name=${name}&`;
         }
-        if(id_category){
-            next += `id_category=${id_category}`;
-            prev += `id_category=${id_category}`;
+        if(category_id){
+            next += `category_id=${category_id}`;
+            prev += `category_id=${category_id}`;
         }
 
         if(parseInt(page) === 1 && totalPage !== 1){

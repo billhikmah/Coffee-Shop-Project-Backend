@@ -16,7 +16,7 @@ return key === "email" || key === "password" || key === "phone";
 };
 
 const updateUser = (req, res, next) => {
-    let {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture} = req.body;
+    let {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture} = req.body;
 
     if(first_name){
         if(first_name.length > 20){
@@ -48,10 +48,10 @@ const updateUser = (req, res, next) => {
             }
         }
     }
-    if(sex){
-        if(sex !== "1" && sex !== "2"){
+    if(sex_id){
+        if(sex_id !== "1" && sex_id !== "2"){
             return res.status(400).json({
-                error: "Invalid input sex!"
+                error: "Invalid input sex_id!"
             });
         }
     }

@@ -1,15 +1,15 @@
 const addNewPromo = (req, res, next) => {
-    const {name, price, id_name, description, id_size, id_delivery_method, disc, start_date, end_date, coupon_code, picture} = req.body;
+    const {name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture} = req.body;
     const validateQuery = Object.keys(req.body).filter(
         (key) => {
 return key === "name" || key === "price" || key === "disc" ||
-            key === "id_delivery_method" || key === "start_date" || key === "end_date" || key === "coupon_code" || key === "id_name";
+            key === "delivery_method_id" || key === "start_date" || key === "end_date" || key === "coupon_code" || key === "product_id";
 }
     );
 
     if(validateQuery.length < 8){
         return res.status(400).json({
-            error: "New product input must contain name, price, disc, id_delivery_method, start_date, end_date, coupon_code, and id_name!",
+            error: "New product input must contain name, price, disc, delivery_method_id, start_date, end_date, coupon_code, and product_id!",
             added_input: validateQuery
         });
     }
@@ -18,9 +18,9 @@ return key === "name" || key === "price" || key === "disc" ||
             error: "Name cannot be longer than 40 characters!"
         });
     }
-    if(id_size < 1 || id_size > 7){
+    if(size_id < 1 || size_id > 7){
         return res.status(400).json({
-            error: "Invalid input id_size!"
+            error: "Invalid input size_id!"
         });
     }
     if(price.length > 6){
@@ -40,9 +40,9 @@ return key === "name" || key === "price" || key === "disc" ||
             });
         }
     }
-    if(id_delivery_method < 1 || id_delivery_method > 3){
+    if(delivery_method_id < 1 || delivery_method_id > 3){
         return res.status(400).json({
-            error: "Invalid input id_delivery_method!"
+            error: "Invalid input delivery_method_id!"
         });
     }
     if(coupon_code.length >= 10){
@@ -54,7 +54,7 @@ return key === "name" || key === "price" || key === "disc" ||
 };
 
 const updatePromo = (req, res, next) => {
-    const {name, price, description, id_size, id_delivery_method, disc, start_date, end_date, coupon_code, picture, id_name} = req.body;
+    const {name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture, product_id} = req.body;
 
     if(name){
         if(name.length >= 40){
@@ -63,10 +63,10 @@ const updatePromo = (req, res, next) => {
             });
         }
     }
-    if(id_size){
-        if(id_size < 1 || id_size > 7){
+    if(size_id){
+        if(size_id < 1 || size_id > 7){
             return res.status(400).json({
-                error: "Invalid input id_size!"
+                error: "Invalid input size_id!"
             });
         }
     }
@@ -93,10 +93,10 @@ const updatePromo = (req, res, next) => {
             }
         }
     }
-    if(id_delivery_method){
-        if(id_delivery_method < 1 || id_delivery_method > 3){
+    if(delivery_method_id){
+        if(delivery_method_id < 1 || delivery_method_id > 3){
             return res.status(400).json({
-                error: "Invalid input id_delivery_method!"
+                error: "Invalid input delivery_method_id!"
             });
         }
     }

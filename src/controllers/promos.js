@@ -26,55 +26,28 @@ const searchPromos = (req, res) => {
     searchPromosFromServer(req.query)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
-        const {keyword, limit, page} = req.query;
+        const {keyword = "", limit = 5, page = 1} = req.query;
         const nextPage = parseInt(page) + 1;
         const prevPage = parseInt(page) - 1;
 
-        let next = `/promos${req.path}?keyword=${keyword}&`;
-        let prev = `/promos${req.path}?keyword=${keyword}&`;
+        let next = `/promos${req.path}?keyword=${keyword}&limit=${limit}&page=${nextPage}`;
+        let prev = `/promos${req.path}?keyword=${keyword}&limit=${limit}&page=${prevPage}`;
 
-        if(limit){
-            next += `limit=${limit}&`;
-            prev += `limit=${limit}&`;
-        }
-        if(page){
-            next += `page=${nextPage}`;
-            prev += `page=${prevPage}`;
-        }
         if(parseInt(page) === 1 && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                next
-            };
-            return searchResponse(res, 202, data, meta);
+            prev = null;
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                prev
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
         }
         if(totalPage === 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page)
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
+            prev = null;
         }
         const meta = {
             totalData,
             totalDataOnThisPage,
             totalPage,
-            page: parseInt(req.query.page),
+            page: parseInt(page),
             next,
             prev
         };

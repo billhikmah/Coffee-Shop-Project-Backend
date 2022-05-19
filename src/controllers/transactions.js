@@ -15,66 +15,39 @@ const postNewTransaction = (req, res) => {
 };
 
 const searchTransaction= (req, res) => {
-    searchTransactionsFromServer(req.query, req.query.id)
+    searchTransactionsFromServer(req.query, req.query.user_id)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
-        const {id, id_user, limit, page} = req.query;
+        const {id, user_id, limit = 5, page = 1} = req.query;
         const nextPage = parseInt(page) + 1;
         const prevPage = parseInt(page) - 1;
 
-        let next = `/transactions${req.path}?`;
-        let prev = `/transactions${req.path}?`;
+        let next = `/transactions${req.path}?limit=${limit}&page=${nextPage}`;
+        let prev = `/transactions${req.path}?limit=${limit}&page=${prevPage}`;
 
-        if(id_user){
-            next += `id_user=${id_user}&`;
-            prev += `id_user=${id_user}&`;
+        if(user_id){
+            next += `user_id=${user_id}&`;
+            prev += `user_id=${user_id}&`;
         }
         if(id){
             next += `sort=${id}&`;
             prev += `sort=${id}&`;
         }
-        if(limit){
-            next += `limit=${limit}&`;
-            prev += `limit=${limit}&`;
-        }
-        if(page){
-            next += `page=${nextPage}`;
-            prev += `page=${prevPage}`;
-        }
         if(parseInt(page) === 1 && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                next
-            };
-            return searchResponse(res, 202, data, meta);
+            prev = null;
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                prev
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
         }
         if(totalPage === 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page)
-            };
-            return searchResponse(res, 202, data, meta);
+            next =null;
+            prev= null;
         }
         const meta = {
             totalData,
             totalDataOnThisPage,
             totalPage,
-            page: parseInt(req.query.page),
+            page,
             next,
             prev
         };
@@ -120,55 +93,28 @@ const searchMyTransaction = (req, res) => {
     searchTransactionsFromServer(req.query, req.userPayload.id)
     .then((result) => {
         const{totalData, totalPage, totalDataOnThisPage, data } = result; 
-        const {limit, page} = req.query;
+        const {limit = 5, page = 1} = req.query;
         const nextPage = parseInt(page) + 1;
         const prevPage = parseInt(page) - 1;
 
-        let next = `/transactions${req.path}?`;
-        let prev = `/transactions${req.path}?`;
+        let next = `/transactions${req.path}?limit=${limit}&page=${nextPage}`;
+        let prev = `/transactions${req.path}?limit=${limit}&page=${prevPage}`;
 
-        if(limit){
-            next += `limit=${limit}&`;
-            prev += `limit=${limit}&`;
-        }
-        if(page){
-            next += `page=${nextPage}`;
-            prev += `page=${prevPage}`;
-        }
         if(parseInt(page) === 1 && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                next
-            };
-            return searchResponse(res, 202, data, meta);
+            prev = null;
         }
         if(parseInt(page) === totalPage && totalPage !== 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page),
-                prev
-            };
-            return searchResponse(res, 202, data, meta);
+            next = null;
         }
         if(totalPage === 1){
-            const meta = {
-                totalData,
-                totalDataOnThisPage,
-                totalPage,
-                page: parseInt(req.query.page)
-            };
-            return searchResponse(res, 202, data, meta);
+            prev = null;
+            next = null;
         }
         const meta = {
             totalData,
             totalDataOnThisPage,
             totalPage,
-            page: parseInt(req.query.page),
+            page: parseInt(page),
             next,
             prev
         };

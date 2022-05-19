@@ -3,10 +3,10 @@ const bcrypt = require("bcrypt");
 
 const addNewUser = (body) => {
     return new Promise((resolve, reject) => {
-        const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture} = body;
-        const sqlQuery = 'INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, created_at';
+        const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture} = body;
+        const sqlQuery = 'INSERT INTO public.users (first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, created_at';
         const created_at = new Date();
-        db.query(sqlQuery, [ first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex, picture, created_at ])
+        db.query(sqlQuery, [ first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id, picture, created_at ])
         .then(({rows}) => {
             const response ={
                 data: rows[0],
@@ -26,28 +26,24 @@ const addNewUser = (body) => {
 
 const searchUserFromServer = (query) => {
     return new Promise((resolve, reject) => {
-        let {name, id, limit, page} = query;
+        let {name = "", id, limit = 5, page = 1} = query;
         const offset = (page - 1)*limit;
-        let sqlQuery = "SELECT id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture FROM public.users";
-        let metaQuery ="select count(*) from public.users";
-        let keyword;
+        let sqlQuery = "SELECT id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture FROM public.users where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%') limit $2 offset $3";
+        let metaQuery ="select count(*) from public.users where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%')";
+        let sqlQueryValues= [ name, limit, offset ];
+        let metaQueryValues = [name];
 
-        if(name){
-            keyword = name;
-            sqlQuery += " where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%') limit $2 offset $3";
-            metaQuery += " where lower(first_name) like lower('%' || $1 || '%') or lower(last_name) like lower('%' || $1 || '%')";
-        }
         if(id){
-            keyword = id;
-            sqlQuery += " where id = $1  limit $2 offset $3";
-            metaQuery += " where id = $1";
+            sqlQuery = "SELECT id, first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture FROM public.users where id = $1 limit $2 offset $3";
+            metaQuery = "select count(*) from public.users where id = $1";
+            sqlQueryValues= [ id, limit, offset ];
+            metaQueryValues = [id];
         }
-        
-        return db.query(metaQuery, [keyword])
+
+        return db.query(metaQuery, metaQueryValues)
         .then((result) => { 
             const totalData = parseInt(result.rows[0].count);
-
-            return db.query(sqlQuery, [ keyword, limit, offset ])
+            return db.query(sqlQuery, sqlQueryValues)
             .then((result) => {
                 if(result.rows.length === 0){
                     return reject({
@@ -80,12 +76,12 @@ const searchUserFromServer = (query) => {
 
 const updateUser = (body, payload, picture) => {
     return new Promise((resolve, reject) => {
-        const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex} = body;
+        const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id} = body;
         const {id} = payload;
         bcrypt.hash(password, 10)
         .then((hashedPassword) => {
-            let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex = COALESCE ($9, sex), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, id";
-            db.query(sqlQuery, [ first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex, picture, id ])
+            let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex_id = COALESCE ($9, sex_id), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id";
+            db.query(sqlQuery, [ first_name, last_name, display_name, email, hashedPassword, phone, date_of_birth, address, sex_id, picture, id ])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({
@@ -145,7 +141,7 @@ const deleteAccountFromServer = (query) => {
 const getUser = (payload) => {
     return new Promise((resolve, reject) => {
         const {id} = payload;
-        const sqlQuery = "SELECT first_name, last_name, display_name, email, phone, date_of_birth, address, sex, picture, id, created_at FROM public.users where id = $1";
+        const sqlQuery = "SELECT first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id, created_at FROM public.users where id = $1";
         db.query(sqlQuery, [id])
         .then((result) => {
             const data = result.rows[0];

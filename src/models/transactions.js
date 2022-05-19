@@ -2,10 +2,10 @@ const db = require("../config/db");
 
 const addNewTransaction = (body, query) => {
     return new Promise((resolve, reject) => {
-        const {id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = body;
-        const {id_user} = query;
-        const sqlQuery = 'INSERT INTO public.transactions (id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
-        db.query(sqlQuery, [ id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address ])
+        const {product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
+        const {user_id} = query;
+        const sqlQuery = 'INSERT INTO public.transactions (user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
+        db.query(sqlQuery, [ user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address ])
         .then(({rows}) => {
             const response ={
                 message: "Transaction added",
@@ -23,30 +23,32 @@ const addNewTransaction = (body, query) => {
     
 };
 
-const searchTransactionsFromServer = (query, id_user) => {
+const searchTransactionsFromServer = (query, user_id) => {
     return new Promise((resolve, reject) => {
-        let { id, limit, page} = query;
+        let { id, limit = 5, page = 1} = query;
         const offset = (page - 1)*limit;
-        let key;
+        let key = [];
+        let metaKey = [];
         let sqlQuery = "SELECT * FROM public.transactions";
         let metaQuery ="select count(*) from public.transactions";
         
-        if(id_user){
-            key = id_user;
-            sqlQuery += " where id_user = $1 limit $2 offset $3";
-            metaQuery += " where id_user = $1";
+        if(user_id){
+            metaKey = [user_id];
+            key = [ user_id, limit, offset ];
+            sqlQuery += " where user_id = $1 limit $2 offset $3";
+            metaQuery += " where user_id = $1";
         }
         if(id){
-            key = id;
+            metaKey = [id];
+            key = [ id, limit, offset ];
             sqlQuery += " where id = $1 limit $2 offset $3";
             metaQuery += " where id = $1";
         }
-
-        return db.query(metaQuery, [key])
+        return db.query(metaQuery, metaKey)
         .then((result) => {
             const totalData = parseInt(result.rows[0].count);
 
-            return db.query(sqlQuery, [ key, limit, offset ])
+            return db.query(sqlQuery, key)
                 .then((result) => {
                     if(result.rows.length === 0){
                         return reject({
@@ -82,10 +84,10 @@ const searchTransactionsFromServer = (query, id_user) => {
 
 const changeTransaction = (body, query) => {
     return new Promise((resolve, reject) => {
-        const {id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = body;
+        const {user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
         const {id} = query;
-        let sqlQuery = "UPDATE public.transactions set id_user = COALESCE ($1, id_user), id_product  = COALESCE ($2, id_product), qty  = COALESCE ($3, qty), id_total  = COALESCE ($4, id_total), id_delivery  = COALESCE ($5, id_delivery), time  = COALESCE ($6, time), date  = COALESCE ($7, date), id_payment_methods  = COALESCE ($8, id_payment_methods), address = COALESCE ($9, address) WHERE id = $10 returning *";
-            db.query(sqlQuery, [ id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address, id ])
+        let sqlQuery = "UPDATE public.transactions set user_id = COALESCE ($1, user_id), product_id  = COALESCE ($2, product_id), qty  = COALESCE ($3, qty), total_price  = COALESCE ($4, total_price), delivery_method_id  = COALESCE ($5, delivery_method_id), time  = COALESCE ($6, time), date  = COALESCE ($7, date), payment_method_id  = COALESCE ($8, payment_method_id), address = COALESCE ($9, address) WHERE id = $10 returning *";
+            db.query(sqlQuery, [ user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, id ])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({

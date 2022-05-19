@@ -1,5 +1,5 @@
 const searchProduct = (req, res, next) => {
-    const {name, id_category, sort, order} = req.query;
+    const {name, category_id, sort, order} = req.query;
     if(name){
         if(typeof name !== "string"){
             return res.status(400).json({
@@ -7,10 +7,10 @@ const searchProduct = (req, res, next) => {
             });
         }
     }
-    if(id_category){
-        if( id_category !== "1" && id_category !== "2" && id_category !== "3"){
+    if(category_id){
+        if( category_id !== "1" && category_id !== "2" && category_id !== "3"){
             return res.status(400).json({
-                error: "Invalid input id_category!"
+                error: "Invalid input category_id!"
             });
         }
     }
@@ -32,17 +32,17 @@ const searchProduct = (req, res, next) => {
 };
 
 const addNewProduct = (req, res, next) => {
-    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body;
+    const {name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture} = req.body;
     const validateQuery = Object.keys(req.body).filter(
         (key) => {
-return key === "name" || key === "price" || key === "id_category" ||
-            key === "id_delivery_method" || key === "id_size" || key === "stock";
+return key === "name" || key === "price" || key === "category_id" ||
+            key === "delivery_method_id" || key === "size_id" || key === "stock";
 }
     );
 
     if(validateQuery.length < 6){
         return res.status(400).json({
-            error: "New product input must contain name, id_size, price, id_category, id_delivery_method, and stock",
+            error: "New product input must contain name, size_id, price, category_id, delivery_method_id, and stock",
             added_input: validateQuery
         });
     }
@@ -51,9 +51,9 @@ return key === "name" || key === "price" || key === "id_category" ||
             error: "Name cannot be longer than 40 characters!"
         });
     }
-    if(id_size < 1 || id_size > 7){
+    if(size_id < 1 || size_id > 7){
         return res.status(400).json({
-            error: "Invalid input id_size!"
+            error: "Invalid input size_id!"
         });
     }
     if(price.length > 6){
@@ -61,9 +61,9 @@ return key === "name" || key === "price" || key === "id_category" ||
             error: "Price cannot be longer than 6 characters!"
         });
     }
-    if(id_category < 1 || id_category > 3){
+    if(category_id < 1 || category_id > 3){
         return res.status(400).json({
-            error: "Invalid input id_category!"
+            error: "Invalid input category_id!"
         });
     }
     if(description){
@@ -73,16 +73,16 @@ return key === "name" || key === "price" || key === "id_category" ||
             });
         }
     }
-    if(id_delivery_method < 1 || id_delivery_method > 3){
+    if(delivery_method_id < 1 || delivery_method_id > 3){
         return res.status(400).json({
-            error: "Invalid input id_delivery_method!"
+            error: "Invalid input delivery_method_id!"
         });
     }
     next();
 };
 
 const updateProduct = (req, res, next) => {
-    const {name, id_size, price, id_category, description, id_delivery_method, start_hour, end_hour, stock, picture} = req.body;
+    const {name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture} = req.body;
     const {file} = req;
 
     if(name){
@@ -92,10 +92,10 @@ const updateProduct = (req, res, next) => {
             });
         }
     }
-    if(id_size){
-        if(id_size < 1 || id_size > 7){
+    if(size_id){
+        if(size_id < 1 || size_id > 7){
             return res.status(400).json({
-                error: "Invalid input id_size!"
+                error: "Invalid input size_id!"
             });
         }
     }
@@ -106,10 +106,10 @@ const updateProduct = (req, res, next) => {
             });
         }
     }
-    if(id_category){
-        if(id_category < 1 || id_category > 3){
+    if(category_id){
+        if(category_id < 1 || category_id > 3){
             return res.status(400).json({
-                error: "Invalid input id_category!"
+                error: "Invalid input category_id!"
             });
         }
     }
@@ -122,10 +122,10 @@ const updateProduct = (req, res, next) => {
             }
         }
     }
-    if(id_delivery_method){
-        if(id_delivery_method < 1 || id_delivery_method > 3){
+    if(delivery_method_id){
+        if(delivery_method_id < 1 || delivery_method_id > 3){
             return res.status(400).json({
-                error: "Invalid input id_delivery_method!"
+                error: "Invalid input delivery_method_id!"
             });
         }
     }

@@ -1,29 +1,29 @@
 const addNewTransaction = (req, res, next) => {
-    const {id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = req.body;
-    const {id_user} = req.query;
+    const {product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = req.body;
+    const {user_id} = req.query;
     let validateQuery = Object.keys(req.body).filter(
         (key) => {
-return key === "id_user" || key === "id_product" || key === "qty" ||
-            key === "id_total" || key === "id_delivery" || key === "time" ||
-            key === "date" || key === "id_payment_methods" || key === "address";
-}
+            return key === "user_id" || key === "product_id" || key === "qty" ||
+            key === "total_price" || key === "delivery_method_id" || key === "time" ||
+            key === "date" || key === "payment_method_id" || key === "address";
+        }
     );
-    validateQuery.push(id_user);
+    validateQuery.push(user_id);
 
     if(validateQuery.length < 9){
         return res.status(400).json({
-            error: "New transaction input must contain id_user, id_product, qty, id_total, id_delivery, time, date, id_payment_methods, and address!",
+            error: "New transaction input must contain user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, and address!",
             added_input: validateQuery
         });
     }
-    if(typeof parseInt(id_user) !== "number"){
+    if(typeof parseInt(user_id) !== "number"){
         return res.status(400).json({
-            error: "Invalid input id_user!"
+            error: "Invalid input user_id!"
         });
     }
-    if(typeof id_product !== "number"){
+    if(typeof product_id !== "number"){
         return res.status(400).json({
-            error: "Invalid input id_product!"
+            error: "Invalid input product_id!"
         });
     }
     if(typeof qty !== "number"){
@@ -31,29 +31,29 @@ return key === "id_user" || key === "id_product" || key === "qty" ||
             error: "Invalid input qty!"
         });
     }
-    if(typeof id_total !== "number"){
+    if(typeof total_price !== "number"){
         return res.status(400).json({
-            error: "Invalid input id_total!"
+            error: "Invalid input total_price!"
         });
     }
-    if(typeof id_delivery !== "number"){
+    if(typeof delivery_method_id !== "number"){
         return res.status(400).json({
-            error: "Invalid input id_delivery!"
+            error: "Invalid input delivery_method_id!"
         });
     }
-    if(id_delivery !== 1 && id_delivery !== 2 && id_delivery !== 3){
+    if(delivery_method_id !== 1 && delivery_method_id !== 2 && delivery_method_id !== 3){
         return res.status(400).json({
-            error: "Invalid input id_delivery!"
+            error: "Invalid input delivery_method_id!"
         });
     }
-    if(typeof id_payment_methods !== "number"){
+    if(typeof payment_method_id !== "number"){
         return res.status(400).json({
-            error: "Invalid input id_payment_methods!"
+            error: "Invalid input payment_method_id!"
         });
     }
-    if(id_payment_methods !== 1 && id_payment_methods !== 2 && id_payment_methods !== 3){
+    if(payment_method_id !== 1 && payment_method_id !== 2 && payment_method_id !== 3){
         return res.status(400).json({
-            error: "Invalid input id_payment_methods!"
+            error: "Invalid input payment_method_id!"
         });
     }
     if(typeof address !== "number"){
@@ -65,20 +65,20 @@ return key === "id_user" || key === "id_product" || key === "qty" ||
 };
 
 const updateTransaction = (req, res, next) => {
-    const {id_product, qty, id_total, id_delivery, time, date, id_payment_methods, address} = req.body;
-    const {id_user} = req.query;
+    const {product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = req.body;
+    const {user_id} = req.query;
 
-    if(id_user){
-        if(typeof id_user !== "number"){
+    if(user_id){
+        if(typeof user_id !== "number"){
             return res.status(400).json({
-                error: "Invalid input id_user!"
+                error: "Invalid input user_id!"
             });
         }
     }
-    if(id_product){
-        if(typeof id_product !== "number"){
+    if(product_id){
+        if(typeof product_id !== "number"){
             return res.status(400).json({
-                error: "Invalid input id_product!"
+                error: "Invalid input product_id!"
             });
         }
     }
@@ -89,34 +89,34 @@ const updateTransaction = (req, res, next) => {
             });
         }
     }
-    if(id_total){
-        if(typeof id_total !== "number"){
+    if(total_price){
+        if(typeof total_price !== "number"){
             return res.status(400).json({
-                error: "Invalid input id_total!"
+                error: "Invalid input total_price!"
             });
         }
     }
-    if(id_delivery){
-        if(typeof id_delivery !== "number"){
+    if(delivery_method_id){
+        if(typeof delivery_method_id !== "number"){
             return res.status(400).json({
-                error: "Invalid input id_delivery!"
+                error: "Invalid input delivery_method_id!"
             });
         }
-        if(id_delivery !== 1 && id_delivery !== 2 && id_delivery !== 3){
+        if(delivery_method_id !== 1 && delivery_method_id !== 2 && delivery_method_id !== 3){
             return res.status(400).json({
-                error: "Invalid input id_delivery!"
+                error: "Invalid input delivery_method_id!"
             });
         }
     }
-    if(id_payment_methods){
-        if(typeof id_payment_methods !== "number"){
+    if(payment_method_id){
+        if(typeof payment_method_id !== "number"){
             return res.status(400).json({
-                error: "Invalid input id_payment_methods!"
+                error: "Invalid input payment_method_id!"
             });
         }
-        if(id_payment_methods !== 1 && id_payment_methods !== 2 && id_payment_methods !== 3){
+        if(payment_method_id !== 1 && payment_method_id !== 2 && payment_method_id !== 3){
             return res.status(400).json({
-                error: "Invalid input id_payment_methods!"
+                error: "Invalid input payment_method_id!"
             });
         }
     }
