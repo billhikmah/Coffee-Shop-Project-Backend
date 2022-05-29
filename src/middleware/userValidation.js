@@ -1,3 +1,5 @@
+const {errorResponse} = require("../helpers/response");
+
 const addNewUser = (req, res, next) => {
     const { email, password, phone} = req.body;
     const validateQuery = Object.keys(req.body).filter(
@@ -11,6 +13,15 @@ return key === "email" || key === "password" || key === "phone";
             error: "New product input must contain email, password, phone!",
             added_input: validateQuery
         });
+    }
+    if(email === ""){
+        return errorResponse(res, 400, {msg:"Email is required"});
+    }
+    if(password === ""){
+        return errorResponse(res, 400, {msg:"Password is required"});
+    }
+    if(phone === ""){
+        return errorResponse(res, 400, {msg:"Phone is required"});
     }
     next();
 };
