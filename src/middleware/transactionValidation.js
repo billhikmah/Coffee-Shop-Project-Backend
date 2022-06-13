@@ -3,16 +3,15 @@ const addNewTransaction = (req, res, next) => {
     const {user_id} = req.query;
     let validateQuery = Object.keys(req.body).filter(
         (key) => {
-            return key === "user_id" || key === "product_id" || key === "qty" ||
-            key === "total_price" || key === "delivery_method_id" || key === "time" ||
-            key === "date" || key === "payment_method_id" || key === "address";
+            return key === "product_id" || key === "qty" ||
+            key === "total_price" || key === "delivery_method_id" || key === "payment_method_id" || key === "address";
         }
     );
     validateQuery.push(user_id);
 
-    if(validateQuery.length < 9){
+    if(validateQuery.length < 6){
         return res.status(400).json({
-            error: "New transaction input must contain user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, and address!",
+            error: "New transaction input must contain user_id, product_id, qty, total_price, delivery_method_id, payment_method_id, and address!",
             added_input: validateQuery
         });
     }
@@ -54,11 +53,6 @@ const addNewTransaction = (req, res, next) => {
     if(payment_method_id !== 1 && payment_method_id !== 2 && payment_method_id !== 3){
         return res.status(400).json({
             error: "Invalid input payment_method_id!"
-        });
-    }
-    if(typeof address !== "number"){
-        return res.status(400).json({
-            error: "Invalid input address!"
         });
     }
     next();

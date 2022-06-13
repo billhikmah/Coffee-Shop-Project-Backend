@@ -21,7 +21,6 @@ const addNewUser = (body) => {
             });
         });
     });
-    
 };
 
 const searchUserFromServer = (query) => {
@@ -141,7 +140,7 @@ const deleteAccountFromServer = (query) => {
 const getUser = (payload) => {
     return new Promise((resolve, reject) => {
         const {id} = payload;
-        const sqlQuery = "SELECT first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id, created_at FROM public.users where id = $1";
+        const sqlQuery = "SELECT first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id, created_at, password FROM public.users where id = $1";
         db.query(sqlQuery, [id])
         .then((result) => {
             const data = result.rows[0];

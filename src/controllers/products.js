@@ -1,4 +1,4 @@
-const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer } = require("../models/products");
+const {addNewProduct, searchProductFromServer, updateProduct, deleteProductFromServer, getProduct} = require("../models/products");
 const {errorResponse, searchResponse} = require("../helpers/response");
 
 const postNewProduct = (req, res) => {
@@ -73,7 +73,6 @@ const updateProducts = (req, res) => {
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     const {id} = req.params;
-    console.log(id);
     updateProduct(req.body, req.params, picture)
     .then(({message, data}) => {
         res.status(201).json({
@@ -103,9 +102,23 @@ const deleteProduct = (req, res) => {
     });
 };
 
+const getOneProduct = (req, res) => {
+    getProduct(req.params)
+    .then(({data}) => {
+        res.status(200).json({
+            data
+        });
+    })
+    .catch(({error, status}) => {
+        res.status(status).json({
+            error
+        });
+    });
+};
 module.exports = {
     postNewProduct,
     searchProduct,
     updateProducts,
-    deleteProduct
+    deleteProduct,
+    getOneProduct
 };

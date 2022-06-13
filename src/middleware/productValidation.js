@@ -15,7 +15,7 @@ const searchProduct = (req, res, next) => {
         }
     }
     if(sort){
-        if(sort !== "price" && sort !== "input_time" && sort !== "favorites" && sort !== "id"){
+        if(sort !== "price" && sort !== "input_time" && sort !== "favorites" && sort !== "id" && sort !== "name"){
             return res.status(400).json({
                 error: "Invalid input sort!"
             });

@@ -57,10 +57,12 @@ const signIn = (req, res) => {
             .then((result) => {
                 if(result === 1){
                     const token = jwt.sign(adminPayload, process.env.JWT_KEY, jwtOptions);
-                    return successResponse(res, 200, {email, token}, null);
+                    const role = "admin";
+                    return successResponse(res, 200, {email, token, role}, null);
                 }
                 const token = jwt.sign(userPayload, process.env.JWT_KEY, jwtOptions);
-                successResponse(res, 200, {email, token}, null);
+                const role = "user";
+                successResponse(res, 200, {email, token, role}, null);
             })
             .catch(({err, status}) => {
                 errorResponse(res, status, err);

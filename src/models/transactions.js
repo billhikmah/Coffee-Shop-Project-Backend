@@ -2,8 +2,11 @@ const db = require("../config/db");
 
 const addNewTransaction = (body, query) => {
     return new Promise((resolve, reject) => {
-        const {product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
+        const {product_id, qty, total_price, delivery_method_id, payment_method_id, address} = body;
         const {user_id} = query;
+        const today = new Date();
+        const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         const sqlQuery = 'INSERT INTO public.transactions (user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
         db.query(sqlQuery, [user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address])
         .then(({rows}) => {
@@ -35,13 +38,13 @@ const searchTransactionsFromServer = (query, user_id) => {
         if(user_id){
             metaKey = [user_id];
             key = [user_id, limit, offset];
-            sqlQuery += " where user_id = $1 limit $2 offset $3";
+            sqlQuery += " where user_id = $1 order by date desc, time desc limit $2 offset $3";
             metaQuery += " where user_id = $1";
         }
         if(id){
             metaKey = [id];
             key = [id, limit, offset];
-            sqlQuery += " where id = $1 limit $2 offset $3";
+            sqlQuery += " where id = $1 order by date desc, time desc limit $2 offset $3";
             metaQuery += " where id = $1";
         }
         return db.query(metaQuery, metaKey)

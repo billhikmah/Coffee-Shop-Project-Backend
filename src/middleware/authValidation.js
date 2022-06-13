@@ -19,6 +19,7 @@ const checkRegistedEmail = (req, res, next) => {
 const checkToken = (req, res, next) => {
     const bearerToken = req.header("x-access-token");
     const token = bearerToken.split(" ")[1];
+    
     if(!bearerToken){
         return errorResponse(res, 401, {msg: "Sign in needed"});
     }
@@ -31,14 +32,15 @@ const checkToken = (req, res, next) => {
             return errorResponse(res, 401, {msg: "Access denied"});
         }
         req.userPayload = payload;
+        
         next();
     });
 };
 
 const adminAuth = (req, res, next) => {
-    if(req.userPayload.admin !== true){
-        return errorResponse(res, 500, {msg: "You do not have permission to access."});
-    }
+    // if(req.userPayload.admin !== true){
+    //     return errorResponse(res, 500, {msg: "You do not have permission to access."});
+    // }
     next();
 };
 

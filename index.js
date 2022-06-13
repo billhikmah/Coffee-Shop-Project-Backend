@@ -5,14 +5,17 @@ const mainRouter = require("./src/routes/index");
 const db = require("./src/config/db");
 const server = express();
 const PORT = 8080;
+const logger = require("morgan");
 
 db.connect()
 .then(() => {
     console.log("DB is connected");
+    server.use(
+        logger(":method :url :status :res[content-length] - :response-time ms"));
     const corsOptions = {
         origin: ["http://localhost:3000"],
         methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["COntent-Type", "Authorization"]
+        allowedHeaders: ["COntent-Type", "Authorization", "x-access-token"]
     };
     server.use("*", cors(corsOptions));
     server.use(express.urlencoded({extended: false}));

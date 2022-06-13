@@ -11,21 +11,21 @@ const searchProductFromServer = (data) => {
         let queryValues;
 
         if(sort === "favorites"){
-        query = "SELECT t.product_id, p.name, count(t.product_id) as \"order total\", c.name as \"category\" FROM public.transactions t join products p on t.product_id = p.id join category c on p.category_id = c.id";
+        query = "SELECT t.product_id as \"id\", p.name, count(t.product_id) as \"order total\", c.name as \"category\", p.price, p.picture FROM public.transactions t join products p on t.product_id = p.id join category c on p.category_id = c.id";
         totalQuery = "SELECT count(*), t.product_id  FROM public.transactions t join public.products p on p.id = t.product_id";
 
             if(category_id){
                 totalQuery += " where p.category_id = $1 group by product_id";
                 totalQueryValues = [category_id];
 
-                query += " where p.category_id = $1 group by t.product_id, p.\"name\", c.name order by \"order total\" " + order + " limit $2 offset $3";
+                query += " where p.category_id = $1 group by t.product_id, p.\"name\", c.name, p.price, p.picture order by \"order total\" " + order + " limit $2 offset $3";
                 queryValues = [category_id, limit, offset];
             }
             if(!category_id){
                 totalQuery += " group by product_id ";
                 totalQueryValues = [];
                 
-                query += " group by t.product_id, p.\"name\", c.name order by \"order total\" " + order + " limit $1 offset $2";
+                query += " group by t.product_id, p.\"name\", c.name, p.price, p.picture order by \"order total\" " + order + " limit $1 offset $2";
                 queryValues = [limit, offset];
             }
         }
@@ -41,7 +41,7 @@ const searchProductFromServer = (data) => {
                 totalQuery += " where lower(p.name) like lower('%' || $1 || '%')";
                 totalQueryValues = [name];
 
-                query += " where lower(p.name) like lower('%' || $1 || '%')  limit $2 offset $3";
+                query += " where lower(p.name) like lower('%' || $1 || '%') order by " + sort + " " + order + " limit $2 offset $3";
                 queryValues = [name, limit, offset];
             }
         }
@@ -185,9 +185,35 @@ const deleteProductFromServer = (query) => {
     });
 };
 
+const getProduct = (query) => {
+    return new Promise((resolve, reject) => {
+        const {id} = query;
+        let sqlQuery = "SELECT id, name, size_id, price, category_id, description, delivery_method_id, start_hour, end_hour, stock, picture, input_time FROM public.products where id = $1";
+        db.query(sqlQuery, [id])
+        .then(({rows}) => {
+            if(rows.length === 0){
+                return reject({
+                    error: "Id Not Found!",
+                    status: 400
+                });
+            }
+            const response = {
+                data: rows
+            };
+            resolve(response);
+        })
+        .catch((error) => {
+            reject({
+                error,
+                status: 500
+            });
+        });
+    });
+};
 module.exports = {
     addNewProduct,
     searchProductFromServer,
     updateProduct,
-    deleteProductFromServer
+    deleteProductFromServer,
+    getProduct
 };
