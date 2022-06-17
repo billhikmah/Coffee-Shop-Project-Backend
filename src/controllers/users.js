@@ -71,7 +71,8 @@ const updateAccount = (req, res) => {
     .then(({data, message}) => {
         res.status(201).json({
             message,
-            data
+            data,
+            req: req.body
         });
     })
     .catch((err) => {
