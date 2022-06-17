@@ -68,11 +68,10 @@ const updateAccount = (req, res) => {
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
     updateUser(req.body, payload, picture)
-    .then(({data, message, picture}) => {
+    .then(({data, message}) => {
         res.status(201).json({
             message,
-            data,
-            picture
+            data
         });
     })
     .catch((err) => {

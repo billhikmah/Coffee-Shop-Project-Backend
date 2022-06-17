@@ -91,8 +91,7 @@ const updateUser = (body, payload, picture) => {
                 }
                 const response = {
                     message: "User Updated",
-                    data: rows,
-                    picture: picture
+                    data: rows
                 };
                 resolve(response);
             })
