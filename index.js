@@ -17,7 +17,7 @@ db.connect()
     server.use(
         logger(":method :url :status :res[content-length] - :response-time ms"));
     const corsOptions = {
-        origin: ["http://localhost:3000", "https://starbills.netlify.app", "https://starbills.herokuapp.com"],
+        origin: ["http://localhost:3000", "https://starbills.netlify.app", "https://starbills.herokuapp.com", "*"],
         methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["COntent-Type", "Authorization", "x-access-token"]
     };
