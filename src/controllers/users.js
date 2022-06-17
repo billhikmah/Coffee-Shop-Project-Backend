@@ -63,7 +63,7 @@ const searchUser = (req, res) => {
 const updateAccount = (req, res) => {
     const payload = req.userPayload;
     const {file = null} = req;
-    let picture = "kosong";
+    let picture;
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
