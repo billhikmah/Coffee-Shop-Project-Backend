@@ -64,6 +64,7 @@ const updateAccount = (req, res) => {
     const payload = req.userPayload;
     const {file = null} = req;
     let picture;
+    console.log(req.body);
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
@@ -71,8 +72,7 @@ const updateAccount = (req, res) => {
     .then(({data, message}) => {
         res.status(201).json({
             message,
-            data,
-            req: req.body
+            data
         });
     })
     .catch((err) => {
