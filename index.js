@@ -9,7 +9,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const upload = require("./src/middleware/upload");
 const cloudinary = require("./src/middleware/cloudinary");
-const fs = require("fs");
+// const fs = require("fs");
 
 db.connect()
 .then(() => {
