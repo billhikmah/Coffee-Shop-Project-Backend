@@ -67,7 +67,7 @@ const updateAccount = (req, res) => {
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
-    console.log(file);
+    console.log(req.body);
     updateUser(req.body, payload, picture)
     .then(({data, message}) => {
         res.status(201).json({
