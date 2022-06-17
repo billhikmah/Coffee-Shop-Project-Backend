@@ -90,7 +90,7 @@ const updateUser = (body, payload, picture) => {
                     });
                 }
                 const response = {
-                    message: "User Updated!",
+                    message: "User Updated",
                     data: rows,
                     picture: picture
                 };
