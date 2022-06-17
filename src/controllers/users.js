@@ -63,11 +63,11 @@ const searchUser = (req, res) => {
 const updateAccount = (req, res) => {
     const payload = req.userPayload;
     const {file = null} = req;
-    let picture;
-    console.log(req.body);
+    let picture = "kosong";
     if(file){
         picture = file.path.replace("public", "").replace(/\\/g, "/");
     }
+    console.log(picture);
     updateUser(req.body, payload, picture)
     .then(({data, message}) => {
         res.status(201).json({
