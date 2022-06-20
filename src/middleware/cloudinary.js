@@ -6,9 +6,11 @@ const uploadPicture = async (req, res, next) => {
     console.log(picture);
     if(picture){
         try {
-            const uploadedResponse = await cloudinary.uploader.upload(picture, {
-                upload_preset: "mf_default"
-            });
+            const uploadedResponse = await cloudinary.uploader.upload(picture
+            //     {
+            //     upload_preset: "mf_default"
+            // }
+            );
             // return successResponse(res, 200, uploadedResponse);
             console.log("success", uploadedResponse);
             next();
