@@ -2,7 +2,8 @@ const {errorResponse, successResponse} = require("../helpers/response");
 const cloudinary = require("../utils/cloudinary");
 
 const uploadPicture = (req, res, next) => {
-    const {file = null} = req;
+    const file = req.file;
+    console.log(file);
     if(file){
         try {
             const uploadedResponse = cloudinary.uploader.upload(file, {
@@ -15,7 +16,7 @@ const uploadPicture = (req, res, next) => {
             
         } catch (error) {
             console.log(error);
-            errorResponse(res, 500, error);
+            errorResponse(res, 502, error);
             
         }
     }
