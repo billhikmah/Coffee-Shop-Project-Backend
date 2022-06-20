@@ -1,5 +1,5 @@
 const {errorResponse, successResponse} = require("../helpers/response");
-const {cloudinary} = require("../utils/cloudinary");
+const cloudinary = require("../utils/cloudinary");
 
 const uploadPicture = (req, res, next) => {
     const picture = req.file;
