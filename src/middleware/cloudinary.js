@@ -14,7 +14,8 @@ const uploadPicture = (req, res, next) => {
 
             
         } catch (error) {
-            errorResponse(res, 502, error);
+            console.log(error);
+            errorResponse(res, 500, error);
             
         }
     }
