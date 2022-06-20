@@ -8,7 +8,10 @@ const uploadPicture = (req, res, next) => {
             const uploadedResponse = cloudinary.uploader.upload(file, {
                 upload_preset: "mf_default"
             });
-            return successResponse(res, 200, uploadedResponse);
+            // return successResponse(res, 200, uploadedResponse);
+            console.log(uploadedResponse);
+            next();
+
             
         } catch (error) {
             errorResponse(res, 500, error);
