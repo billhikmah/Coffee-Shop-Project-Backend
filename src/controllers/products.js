@@ -8,6 +8,7 @@ const postNewProduct = (req, res) => {
         picture = req.url;
     }
     console.log(req.body);
+    console.log(req.file);
     addNewProduct(req.body, picture)
     .then(({data}) => {
         res.status(201).json({
