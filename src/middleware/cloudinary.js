@@ -7,7 +7,7 @@ const uploadPicture = async (req, res, next) => {
         try {
             const uploadedResponse = await cloudinary.uploader.upload(picture,
                 {
-                upload_preset: "mf_default"
+                upload_preset: "ml_default"
             }
             );
             req.url = uploadedResponse.url;
