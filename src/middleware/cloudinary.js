@@ -3,7 +3,6 @@ const cloudinary = require("../utils/cloudinary");
 
 const uploadPicture = async (req, res, next) => {
     const picture = req.file.path;
-    console.log(picture);
     if(picture){
         try {
             const uploadedResponse = await cloudinary.uploader.upload(picture,
@@ -11,14 +10,13 @@ const uploadPicture = async (req, res, next) => {
                 upload_preset: "mf_default"
             }
             );
-            // return successResponse(res, 200, uploadedResponse);
-            console.log("success", uploadedResponse);
-            next();
+            req.url = uploadedResponse.uploadedResponse;
+            return next();
 
             
         } catch (error) {
             console.log("error:", error);
-            errorResponse(res, 502, error);
+            errorResponse(res, 500, error);
             
         }
     }
