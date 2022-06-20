@@ -67,6 +67,7 @@ const updateAccount = (req, res) => {
     if(file){
         picture = req.url;
     }
+    console.log(req.body);
     updateUser(req.body, payload, picture)
     .then(({data, message}) => {
         res.status(201).json({
