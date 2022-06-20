@@ -14,6 +14,7 @@ const uploadPicture = async (req, res, next) => {
             errorResponse(res, 500, error);
         }
     }
+    next();
 };
 
 module.exports = { uploadPicture };
