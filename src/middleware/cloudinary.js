@@ -15,7 +15,7 @@ const uploadPicture = async (req, res) => {
     if(file){
         try {
             const uploadedResponse = await cloudinary.uploader.upload(file, {
-                upload_preset: "dev_setups"
+                upload_preset: "mf_default"
             });
             successResponse(res, 200, uploadedResponse);
             
