@@ -10,7 +10,7 @@ cloudinary.config({
     api_secre: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadPicture = async (req, res) => {
+const uploadPicture = async (req, res, next) => {
     const {file = null} = req;
     if(file){
         try {
@@ -18,6 +18,7 @@ const uploadPicture = async (req, res) => {
                 upload_preset: "mf_default"
             });
             successResponse(res, 200, uploadedResponse);
+            next();
             
         } catch (error) {
             errorResponse(res, 500, error);
