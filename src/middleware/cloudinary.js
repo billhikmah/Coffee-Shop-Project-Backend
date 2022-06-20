@@ -2,11 +2,11 @@ const {errorResponse, successResponse} = require("../helpers/response");
 const cloudinary = require("../utils/cloudinary");
 
 const uploadPicture = (req, res, next) => {
-    const file = req.file;
-    console.log(file);
-    if(file){
+    const {picture} = req.body;
+    console.log(picture);
+    if(picture){
         try {
-            const uploadedResponse = cloudinary.uploader.upload(file, {
+            const uploadedResponse = cloudinary.uploader.upload(picture, {
                 upload_preset: "mf_default"
             });
             // return successResponse(res, 200, uploadedResponse);
