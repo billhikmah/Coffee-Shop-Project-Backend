@@ -64,7 +64,6 @@ const updateAccount = (req, res) => {
     const payload = req.userPayload;
     const {file = null} = req;
     let picture;
-    console.log(req.url);
     if(file){
         picture = req.url;
     }

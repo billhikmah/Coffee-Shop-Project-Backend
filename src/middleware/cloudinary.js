@@ -8,12 +8,9 @@ const uploadPicture = async (req, res, next) => {
             const uploadedResponse = await cloudinary.uploader.upload(picture, {folder: "public/images"});
             req.url = uploadedResponse.url;
             return next();
-
-            
         } catch (error) {
             console.log("error:", error);
             errorResponse(res, 500, error);
-            
         }
     }
 };

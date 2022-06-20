@@ -77,7 +77,6 @@ const updateUser = (body, payload, picture) => {
     return new Promise((resolve, reject) => {
         const {first_name, last_name, display_name, email, password, phone, date_of_birth, address, sex_id} = body;
         const {id} = payload;
-        console.log(body);
         bcrypt.hash(password, 10)
         .then((hashedPassword) => {
             let sqlQuery = "UPDATE public.users set first_name = COALESCE ($1, first_name), last_name  = COALESCE ($2, last_name), display_name  = COALESCE ($3, display_name), email  = COALESCE ($4, email), password  = COALESCE ($5, password), phone  = COALESCE ($6, phone), date_of_birth  = COALESCE ($7, date_of_birth), address  = COALESCE ($8, address), sex_id = COALESCE ($9, sex_id), picture = coalesce ($10, picture) WHERE id = $11 returning first_name, last_name, display_name, email, phone, date_of_birth, address, sex_id, picture, id";
