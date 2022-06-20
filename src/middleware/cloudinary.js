@@ -10,7 +10,7 @@ const uploadPicture = async (req, res, next) => {
                 upload_preset: "mf_default"
             }
             );
-            req.url = uploadedResponse.uploadedResponse;
+            req.url = uploadedResponse.url;
             return next();
 
             
