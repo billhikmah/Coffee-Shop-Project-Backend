@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
         }
     }
     if(sex_id){
-        if(sex_id !== 1 && sex_id !== 2){
+        if(sex_id !== "1" && sex_id !== "2"){
             return res.status(400).json({
                 error: "Invalid input sex_id!"
             });
