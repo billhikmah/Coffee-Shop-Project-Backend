@@ -10,12 +10,12 @@ const uploadPicture = (req, res, next) => {
                 upload_preset: "mf_default"
             });
             // return successResponse(res, 200, uploadedResponse);
-            console.log(uploadedResponse);
+            console.log("success", uploadedResponse);
             next();
 
             
         } catch (error) {
-            console.log(error);
+            console.log("error:", error);
             errorResponse(res, 502, error);
             
         }
