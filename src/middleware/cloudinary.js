@@ -2,7 +2,7 @@ const {errorResponse, successResponse} = require("../helpers/response");
 const cloudinary = require("../utils/cloudinary");
 
 const uploadPicture = async (req, res, next) => {
-    const picture = req.file;
+    const picture = req.file.path;
     console.log(picture);
     if(picture){
         try {
