@@ -5,7 +5,7 @@ const uploadPicture = async (req, res, next) => {
     const picture = req.file.path;
     if(picture){
         try {
-            const Response = await cloudinary.uploader.upload(picture, {folder: "public/Images"});
+            const Response = await cloudinary.uploader.upload(picture, {folder: "public"});
             req.url = Response.url;
             return next();
         } catch (error) {
