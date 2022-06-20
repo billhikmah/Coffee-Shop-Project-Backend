@@ -6,9 +6,6 @@ const db = require("./src/config/db");
 const server = express();
 const PORT = process.env.PORT || 8080;
 const logger = require("morgan");
-const bodyParser = require("body-parser");
-const upload = require("./src/middleware/upload");
-const cloudinary = require("./src/middleware/cloudinary");
 const fs = require("fs");
 
 db.connect()
