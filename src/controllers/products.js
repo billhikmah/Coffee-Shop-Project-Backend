@@ -72,7 +72,7 @@ const updateProducts = (req, res) => {
     const {file} = req;
     let picture = "";
     if(file){
-        picture = file.path.replace("public", "").replace(/\\/g, "/");
+        picture = req.url;
     }
     const {id} = req.params;
     updateProduct(req.body, req.params, picture)
