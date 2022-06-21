@@ -75,7 +75,7 @@ const updateTransaction = (req, res) => {
 };
 
 const deleteTransaction = (req, res) => {
-    deleteTransactionFromServer(req.body)
+    changeTransaction(req.body)
     .then(({data, message}) => {
         res.status(200).json({
             message,

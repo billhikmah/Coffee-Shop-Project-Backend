@@ -87,10 +87,10 @@ const searchTransactionsFromServer = (query, user_id) => {
 
 const changeTransaction = (body, query) => {
     return new Promise((resolve, reject) => {
-        const {user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address} = body;
+        const {user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, deleted_at} = body;
         const {id} = query;
-        let sqlQuery = "UPDATE public.transactions set user_id = COALESCE ($1, user_id), product_id  = COALESCE ($2, product_id), qty  = COALESCE ($3, qty), total_price  = COALESCE ($4, total_price), delivery_method_id  = COALESCE ($5, delivery_method_id), time  = COALESCE ($6, time), date  = COALESCE ($7, date), payment_method_id  = COALESCE ($8, payment_method_id), address = COALESCE ($9, address) WHERE id = $10 returning *";
-            db.query(sqlQuery, [user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, id])
+        let sqlQuery = "UPDATE public.transactions set user_id = COALESCE ($1, user_id), product_id  = COALESCE ($2, product_id), qty  = COALESCE ($3, qty), total_price  = COALESCE ($4, total_price), delivery_method_id  = COALESCE ($5, delivery_method_id), time  = COALESCE ($6, time), date  = COALESCE ($7, date), payment_method_id  = COALESCE ($8, payment_method_id), address = COALESCE ($9, address), COALESCE ($10, deleted_at) WHERE id = $11 returning *";
+            db.query(sqlQuery, [user_id, product_id, qty, total_price, delivery_method_id, time, date, payment_method_id, address, deleted_at, id])
             .then(({rows}) => {
                 if(rows.length === 0){
                     return reject({
