@@ -5,7 +5,7 @@ const postNewPromo = (req, res) => {
     const {file = null} = req;
     let picture;
     if(file){
-        picture = file.path.replace("public", "").replace(/\\/g, "/");
+        picture = req.url;
     }
     addNewPromo(req.body, picture)
     .then(({data, message}) => {
