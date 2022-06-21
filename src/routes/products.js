@@ -9,7 +9,7 @@ const cloudinary = require("../middleware/cloudinary");
 
 Router.post("/", checkToken.checkToken, checkToken.adminAuth, imageUpload.single("picture"), fileValidation.imageValidation, cloudinary.uploadPicture, validate.addNewProduct, productsController.postNewProduct);
 Router.get("/", validate.searchProduct, productsController.searchProduct);
-Router.patch("/:id/", checkToken.checkToken, checkToken.adminAuth, imageUpload.single("picture"), fileValidation.imageValidation, validate.updateProduct, productsController.updateProducts);
+Router.patch("/:id/", checkToken.checkToken, checkToken.adminAuth, imageUpload.single("picture"), fileValidation.imageValidation, cloudinary.uploadPicture, validate.updateProduct, productsController.updateProducts);
 Router.delete("/", checkToken.checkToken, checkToken.adminAuth, productsController.deleteProduct);
 Router.get("/details/:id", checkToken.checkToken, productsController.getOneProduct);
 
