@@ -45,23 +45,23 @@ In addition to using the Express.js framework, this frontend is also supported b
 
 <h2>Preview</h2>
 <div style="display:flex; justify-content: left; column-gap:20px; margin-bottom:20px">
-<img src="public/readme/payment.png" alt="login" height=200>
+<img src="public/readme/Payment.png" alt="login" height=200>
 
-<img src="public/readme/edit.png" alt="signup" height=200>
-
-</div>
-
-<div style="display:flex; justify-content: left; column-gap:20px; margin-bottom:20px">
-<img src="public/readme/profile.png" alt="login" height=200>
-
-<img src="public/readme/product.png" alt="signup" height=200>
+<img src="public/readme/Edit.png" alt="signup" height=200>
 
 </div>
 
 <div style="display:flex; justify-content: left; column-gap:20px; margin-bottom:20px">
-<img src="public/readme/details.png" alt="profile" height=200>
+<img src="public/readme/Profile.png" alt="login" height=200>
 
-<img src="public/readme/history.png" alt="product" height=200>
+<img src="public/readme/Product.png" alt="signup" height=200>
+
+</div>
+
+<div style="display:flex; justify-content: left; column-gap:20px; margin-bottom:20px">
+<img src="public/readme/Details.png" alt="profile" height=200>
+
+<img src="public/readme/History.png" alt="product" height=200>
 
 </div>
 
