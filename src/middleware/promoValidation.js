@@ -3,13 +3,13 @@ const addNewPromo = (req, res, next) => {
     const validateQuery = Object.keys(req.body).filter(
         (key) => {
 return key === "name" || key === "price" || key === "disc" ||
-            key === "delivery_method_id" || key === "start_date" || key === "end_date" || key === "coupon_code" || key === "product_id";
+            key === "delivery_method_id" || key === "start_date" || key === "end_date" || key === "coupon_code";
 }
     );
 
-    if(validateQuery.length < 8){
+    if(validateQuery.length < 7){
         return res.status(400).json({
-            error: "New product input must contain name, price, disc, delivery_method_id, start_date, end_date, coupon_code, and product_id!",
+            error: "New product input must contain name, price, disc, delivery_method_id, start_date, end_date, and coupon_code!",
             added_input: validateQuery
         });
     }
