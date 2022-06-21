@@ -2,9 +2,9 @@ const db = require("../config/db");
 
 const addNewPromo = (body, picture) => {
     return new Promise((resolve, reject) => {
-        const {name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code} = body;
-        const sqlQuery = 'INSERT INTO public.promos (name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *';
-        db.query(sqlQuery, [name, price, product_id, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture])
+        const {name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code} = body;
+        const sqlQuery = 'INSERT INTO public.promos (name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
+        db.query(sqlQuery, [name, price, description, size_id, delivery_method_id, disc, start_date, end_date, coupon_code, picture])
         .then(({rows}) => {
             const response ={
                 message: "Promo added",
