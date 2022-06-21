@@ -11,6 +11,6 @@ Router.post("/", checkToken.checkToken, checkToken.adminAuth, imageUpload.single
 Router.get("/", validate.searchProduct, productsController.searchProduct);
 Router.patch("/:id/", checkToken.checkToken, checkToken.adminAuth, imageUpload.single("picture"), fileValidation.imageValidation, cloudinary.uploadPicture, validate.updateProduct, productsController.updateProducts);
 Router.delete("/", checkToken.checkToken, checkToken.adminAuth, productsController.deleteProduct);
-Router.get("/details/:id", checkToken.checkToken, productsController.getOneProduct);
+Router.get("/details/:id", productsController.getOneProduct);
 
 module.exports = Router;
