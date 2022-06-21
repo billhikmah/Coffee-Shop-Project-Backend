@@ -67,9 +67,9 @@ return key === "name" || key === "price" || key === "category_id" ||
         });
     }
     if(description){
-        if(description.length >= 120){
+        if(description.length >= 150){
             return res.status(400).json({
-                error: "Description cannot be longer than 120 characters!"
+                error: "Description cannot be longer than 150 characters!"
             });
         }
     }
@@ -115,9 +115,9 @@ const updateProduct = (req, res, next) => {
     }
     if(description){
         if(description){
-            if(description.length > 120){
+            if(description.length > 200){
                 return res.status(400).json({
-                    error: "Description cannot be longer than 40 characters!"
+                    error: "Description cannot be longer than 200 characters!"
                 });
             }
         }
