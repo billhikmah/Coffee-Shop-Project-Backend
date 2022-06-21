@@ -70,7 +70,7 @@ const searchProduct = (req, res) => {
 };
 const updateProducts = (req, res) => {
     const {file} = req;
-    let picture = "";
+    let picture;
     if(file){
         picture = req.url;
     }
